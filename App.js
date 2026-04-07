@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   StyleSheet, 
   Text, 
@@ -8,6 +8,7 @@ import {
   TouchableOpacity, 
   SafeAreaView,
   StatusBar,
+  Modal,
   ActivityIndicator
 } from 'react-native';
 import { 
@@ -18,6 +19,22 @@ import {
   Lexend_900Black 
 } from '@expo-google-fonts/lexend';
 
+//Import do Formulario
+import CriarTreino from './CriarTreino';
+
+// --- IMPORTAÇÃO DOS SEUS ÍCONES SVG ---
+// Ajuste o caminho './Icons/...' se a pasta estiver em outro lugar dentro do seu projeto
+import AddIcon from './Icons/AddIcon.svg';
+import CiclismIcon from './Icons/CiclismIcon.svg';
+import CustumizeIcon from './Icons/CustumizeIcon.svg';
+import DumbellIcon from './Icons/DumbellIcon.svg';
+import DumbellIconNav from './Icons/DumbellIconNav.svg';
+import ProfileIcon from './Icons/ProfileIcon.svg';
+import RunningIcon from './Icons/RunningIcon.svg';
+import SoccerIcon from './Icons/SoccerIcon.svg';
+import SwimmingIcon from './Icons/SwimmingIcon.svg';
+import VolleyballIcon from './Icons/VolleyballIcon.svg';
+
 // --- DADOS MOCKADOS COMPLETOS ---
 const treinos = [
   {
@@ -26,7 +43,7 @@ const treinos = [
     descricao: 'Treino com pesos, focado na hipertrofia e força muscular.',
     tags: [{ label: 'HIPERTROFIA', bg: '#E6F0FF', text: '#005CEE' }],
     mainColor: '#005CEE',
-    icone: '🏋️',
+    Icone: DumbellIcon, // Passando o componente SVG diretamente
     imagem: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&auto=format&fit=crop',
     textoBotao: 'SELECIONAR'
   },
@@ -36,7 +53,7 @@ const treinos = [
     descricao: 'Atividade de baixo impacto que auxilia na criação de resistência.',
     tags: [{ label: 'BAIXO IMPACTO', bg: '#FFF0E6', text: '#FF6B22' }],
     mainColor: '#FF6B22',
-    icone: '🚴',
+    Icone: CiclismIcon,
     imagem: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=400&auto=format&fit=crop',
     textoBotao: 'SELECIONAR'
   },
@@ -46,7 +63,7 @@ const treinos = [
     descricao: 'Atividade aeróbica, ajuda a criar resistência e queimar calorias.',
     tags: [{ label: 'RESISTÊNCIA', bg: '#F2FCE8', text: '#74D333' }],
     mainColor: '#82E53A',
-    icone: '👟',
+    Icone: RunningIcon,
     imagem: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=400&auto=format&fit=crop',
     textoBotao: 'SELECIONAR'
   },
@@ -56,7 +73,7 @@ const treinos = [
     descricao: 'Esporte coletivo que exige resistência e trabalho em equipe.',
     tags: [{ label: 'COLETIVO', bg: '#E6F0FF', text: '#005CEE' }],
     mainColor: '#005CEE',
-    icone: '⚽',
+    Icone: SoccerIcon,
     imagem: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=400&auto=format&fit=crop',
     textoBotao: 'SELECIONAR'
   },
@@ -69,7 +86,7 @@ const treinos = [
       { label: 'EXPLOSÃO', bg: '#FFF0E6', text: '#FF6B22' }
     ],
     mainColor: '#FF6B22',
-    icone: '🏐',
+    Icone: VolleyballIcon,
     imagem: 'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?q=80&w=400&auto=format&fit=crop',
     textoBotao: 'SELECIONAR'
   },
@@ -79,18 +96,18 @@ const treinos = [
     descricao: 'Modalidade que trabalha o corpo como um todo.',
     tags: [{ label: 'FULLBODY', bg: '#F2FCE8', text: '#74D333' }],
     mainColor: '#82E53A',
-    icone: '🏊',
-    imagem: 'https://images.unsplash.com/photo-1519315901367-f34f815ea071?q=80&w=400&auto=format&fit=crop',
+    Icone: SwimmingIcon,
+    imagem: 'https://images.unsplash.com/photo-1560090995-01632a28895b?w=600&q=80',
     textoBotao: 'SELECIONAR'
   },
   {
     id: '7',
     titulo: 'CUSTOMIZADO',
     descricao: 'Crie seu treino do zero, defina suas prioridades e preferências.',
-    tags: [], // Sem tags no design
+    tags: [],
     mainColor: '#FFB300',
-    icone: '📝',
-    imagem: null, // Sem imagem de topo no design
+    Icone: CustumizeIcon,
+    imagem: null,
     textoBotao: 'CRIE'
   }
 ];
@@ -103,7 +120,8 @@ const estatisticas = [
 ];
 
 export default function App() {
-  // Carregamento da Fonte Lexend
+  const [modalVisible, setModalVisible] = useState(false);
+
   let [fontsLoaded] = useFonts({
     Lexend_400Regular,
     Lexend_700Bold,
@@ -123,7 +141,6 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#F8F9FE" />
       
-      {/* HEADER */}
       <View style={styles.header}>
         <TouchableOpacity>
           <Text style={styles.menuIcon}>☰</Text>
@@ -134,7 +151,6 @@ export default function App() {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
-        {/* TÍTULO DA PÁGINA */}
         <View style={styles.titleContainer}>
           <Text style={styles.mainTitle}>ESCOLHA SEU TREINO</Text>
           <Text style={styles.subtitle}>
@@ -142,41 +158,45 @@ export default function App() {
           </Text>
         </View>
 
-        {/* LISTA DE TREINOS */}
-        {treinos.map((treino) => (
-          <View key={treino.id} style={[styles.card, !treino.imagem && styles.cardSemImagem]}>
-            {treino.imagem && (
-              <Image source={{ uri: treino.imagem }} style={styles.cardImage} />
-            )}
-            
-            <View style={styles.cardContent}>
-              {/* Ícone Flutuante */}
-              <View style={[styles.floatingIcon, { backgroundColor: treino.mainColor }]}>
-                <Text style={styles.iconText}>{treino.icone}</Text>
-              </View>
+        {treinos.map((treino) => {
+          // Extraímos o componente Icone de dentro do objeto do treino para podermos renderizá-lo
+          const IconeDoCard = treino.Icone; 
 
-              <Text style={styles.cardTitle}>{treino.titulo}</Text>
-              <Text style={styles.cardDesc}>{treino.descricao}</Text>
-              
-              {/* Renderização de Múltiplas Tags */}
-              {treino.tags.length > 0 && (
-                <View style={styles.tagsContainer}>
-                  {treino.tags.map((tag, index) => (
-                    <View key={index} style={[styles.tag, { backgroundColor: tag.bg }]}>
-                      <Text style={[styles.tagText, { color: tag.text }]}>{tag.label}</Text>
-                    </View>
-                  ))}
-                </View>
+          return (
+            <View key={treino.id} style={[styles.card, !treino.imagem && styles.cardSemImagem]}>
+              {treino.imagem && (
+                <Image source={{ uri: treino.imagem }} style={styles.cardImage} />
               )}
+              
+              <View style={styles.cardContent}>
+                
+                {/* Ícone Flutuante Renderizado via Componente SVG */}
+                <View style={[styles.floatingIcon, { backgroundColor: treino.mainColor }]}>
+                  {/* Se os ícones não mudarem de cor, tente trocar 'fill' por 'color' ou 'stroke' dependendo de como foram exportados do Figma */}
+                  <IconeDoCard width={24} height={24} fill="#FFFFFF" />
+                </View>
 
-              <TouchableOpacity style={[styles.button, { backgroundColor: treino.mainColor }]}>
-                <Text style={styles.buttonText}>{treino.textoBotao}</Text>
-              </TouchableOpacity>
+                <Text style={styles.cardTitle}>{treino.titulo}</Text>
+                <Text style={styles.cardDesc}>{treino.descricao}</Text>
+                
+                {treino.tags.length > 0 && (
+                  <View style={styles.tagsContainer}>
+                    {treino.tags.map((tag, index) => (
+                      <View key={index} style={[styles.tag, { backgroundColor: tag.bg }]}>
+                        <Text style={[styles.tagText, { color: tag.text }]}>{tag.label}</Text>
+                      </View>
+                    ))}
+                  </View>
+                )}
+
+                <TouchableOpacity style={[styles.button, { backgroundColor: treino.mainColor }]}>
+                  <Text style={styles.buttonText}>{treino.textoBotao}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        ))}
+          );
+        })}
 
-        {/* ESTATÍSTICAS */}
         <View style={styles.statsSection}>
           <Text style={styles.statsTitle}>ESTATÍSTICAS ÚLTIMOS 7 DIAS</Text>
           
@@ -196,23 +216,31 @@ export default function App() {
 
       </ScrollView>
 
-      {/* BOTTOM NAVIGATION */}
+      {/* BOTTOM NAVIGATION COM SVGs */}
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navItem}>
-          <Text style={[styles.navIcon, { color: '#005CEE' }]}>🏋️</Text>
-          <Text style={[styles.navLabel, { color: '#005CEE' }]}>Train</Text>
+          <DumbellIconNav width={24} height={24} color="#005CEE" style={styles.navIconSpacing} />
+          <Text style={[styles.navLabel, { color: '#005CEE' }]}>TRAIN</Text>
         </TouchableOpacity>
 
         <View style={styles.fabContainer}>
-          <TouchableOpacity style={styles.fab}>
-            <Text style={styles.fabIcon}>+</Text>
+          <TouchableOpacity style={styles.fab} onPress={() => setModalVisible(true)}>
+            <AddIcon width={20} height={20} fill="#FFFFFF" />
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>👤</Text>
+          <ProfileIcon width={24} height={24} fill="#9CA3AF" style={styles.navIconSpacing} />
           <Text style={styles.navLabel}>PROFILE</Text>
         </TouchableOpacity>
+
+        <Modal 
+          transparent={false}
+          animationType="slide" 
+          visible={modalVisible}
+        >
+        <CriarTreino fechar={() => setModalVisible(false)} />
+      </Modal>
       </View>
     </SafeAreaView>
   );
@@ -227,7 +255,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 100,
   },
-  
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -246,7 +273,6 @@ const styles = StyleSheet.create({
     color: '#005CEE',
     letterSpacing: 1,
   },
-
   titleContainer: {
     paddingHorizontal: 20,
     marginTop: 10,
@@ -266,12 +292,11 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     lineHeight: 24,
   },
-
   card: {
     backgroundColor: '#FFFFFF',
     borderRadius: 24,
     marginHorizontal: 20,
-    marginBottom: 35, // Aumentado um pouco para acomodar o ícone flutuante do próximo
+    marginBottom: 35,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.05,
@@ -279,7 +304,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   cardSemImagem: {
-    marginTop: 15, // Dá espaço para o ícone flutuante não cortar quando não tem imagem
+    marginTop: 15,
   },
   cardImage: {
     width: '100%',
@@ -304,9 +329,6 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     borderColor: '#FFFFFF',
     zIndex: 10,
-  },
-  iconText: {
-    fontSize: 20,
   },
   cardTitle: {
     fontFamily: 'Lexend_900Black',
@@ -350,7 +372,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     letterSpacing: 0.5,
   },
-
   statsSection: {
     paddingHorizontal: 20,
     marginTop: 10,
@@ -406,7 +427,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Lexend_800ExtraBold',
     fontSize: 10,
   },
-
   bottomNav: {
     position: 'absolute',
     bottom: 0,
@@ -429,10 +449,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 60,
   },
-  navIcon: {
-    fontSize: 24,
-    marginBottom: 4,
-    color: '#9CA3AF',
+  navIconSpacing: {
+    marginBottom: 4, // Adicionado para dar um respiro entre o SVG e o Texto na barra inferior
   },
   navLabel: {
     fontFamily: 'Lexend_700Bold',
@@ -457,11 +475,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 10,
     elevation: 6,
-  },
-  fabIcon: {
-    fontFamily: 'Lexend_400Regular',
-    fontSize: 30,
-    color: '#FFFFFF',
-    marginTop: -2,
   }
 });
