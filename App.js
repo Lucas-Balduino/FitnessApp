@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
-import { 
-  StyleSheet, 
-  Text, 
-  View, 
-  ScrollView, 
-  Image, 
-  TouchableOpacity, 
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Image,
+  TouchableOpacity,
   SafeAreaView,
   StatusBar,
   Modal,
   ActivityIndicator
 } from 'react-native';
-import { 
-  useFonts, 
-  Lexend_400Regular, 
-  Lexend_700Bold, 
-  Lexend_800ExtraBold, 
-  Lexend_900Black 
+import {
+  useFonts,
+  Lexend_400Regular,
+  Lexend_700Bold,
+  Lexend_800ExtraBold,
+  Lexend_900Black
 } from '@expo-google-fonts/lexend';
 
 //Import do Formulario
@@ -142,7 +142,7 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#F8F9FE" />
-      
+
       <View style={styles.header}>
         <TouchableOpacity>
           <Text style={styles.menuIcon}>☰</Text>
@@ -152,7 +152,7 @@ export default function App() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        
+
         <View style={styles.titleContainer}>
           <Text style={styles.mainTitle}>ESCOLHA SEU TREINO</Text>
           <Text style={styles.subtitle}>
@@ -162,16 +162,16 @@ export default function App() {
 
         {treinos.map((treino) => {
           // Extraímos o componente Icone de dentro do objeto do treino para podermos renderizá-lo
-          const IconeDoCard = treino.Icone; 
+          const IconeDoCard = treino.Icone;
 
           return (
             <View key={treino.id} style={[styles.card, !treino.imagem && styles.cardSemImagem]}>
               {treino.imagem && (
                 <Image source={{ uri: treino.imagem }} style={styles.cardImage} />
               )}
-              
+
               <View style={styles.cardContent}>
-                
+
                 {/* Ícone Flutuante Renderizado via Componente SVG */}
                 <View style={[styles.floatingIcon, { backgroundColor: treino.mainColor }]}>
                   {/* Se os ícones não mudarem de cor, tente trocar 'fill' por 'color' ou 'stroke' dependendo de como foram exportados do Figma */}
@@ -180,7 +180,7 @@ export default function App() {
 
                 <Text style={styles.cardTitle}>{treino.titulo}</Text>
                 <Text style={styles.cardDesc}>{treino.descricao}</Text>
-                
+
                 {treino.tags.length > 0 && (
                   <View style={styles.tagsContainer}>
                     {treino.tags.map((tag, index) => (
@@ -204,7 +204,7 @@ export default function App() {
 
         <View style={styles.statsSection}>
           <Text style={styles.statsTitle}>ESTATÍSTICAS ÚLTIMOS 7 DIAS</Text>
-          
+
           <View style={styles.statsGrid}>
             {estatisticas.map((stat) => (
               <View key={stat.id} style={styles.statCard}>
@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     padding: 24,
-    paddingTop: 40, 
+    paddingTop: 40,
     position: 'relative',
   },
   floatingIcon: {
@@ -458,7 +458,7 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   navItem: {
-    flex: 1,
+    width: 100,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
     color: '#9CA3AF',
   },
   fabContainer: {
-    flex: 1,
+    width: 100,
     position: 'relative',
     top: -25,
     justifyContent: 'center',

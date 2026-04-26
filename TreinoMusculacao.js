@@ -12,11 +12,11 @@ import {
 } from 'react-native';
 
 // Ícones
-import ArrowIcon      from './Icons/ArrowIcon.svg';
-import LightningIcon  from './Icons/LightningIcon.svg';
-import AddIcon        from './Icons/AddIcon.svg';
+import ArrowIcon from './Icons/ArrowIcon.svg';
+import LightningIcon from './Icons/LightningIcon.svg';
+import AddIcon from './Icons/AddIcon.svg';
 import DumbellIconNav from './Icons/DumbellIconNav.svg';
-import ProfileIcon    from './Icons/ProfileIcon.svg';
+import ProfileIcon from './Icons/ProfileIcon.svg';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -25,7 +25,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 // ==========================================
 
 const aquecimento = [
-  { numero: '01', numeroColor: '#82E53A', nome: 'Contração escapular',          detalhe: '2 Sets x 15 Reps' },
+  { numero: '01', numeroColor: '#82E53A', nome: 'Contração escapular', detalhe: '2 Sets x 15 Reps' },
   { numero: '02', numeroColor: '#F26522', nome: 'Alongamento dinâmico de peito', detalhe: '60 Seconds' },
 ];
 
@@ -236,8 +236,8 @@ export default function TreinoMusculacao({ fechar }) {
         {/* ── BOTTOM NAVIGATION ── */}
         <View style={styles.bottomNav}>
           <TouchableOpacity style={styles.navItem}>
-            <DumbellIconNav width={24} height={24} color="#9CA3AF" style={styles.navIconSpacing} />
-            <Text style={styles.navLabel}>TRAIN</Text>
+            <DumbellIconNav width={24} height={24} color="#005CEE" style={styles.navIconSpacing} />
+            <Text style={[styles.navLabel, { color: '#005CEE' }]}>TRAIN</Text>
           </TouchableOpacity>
 
           <View style={styles.fabContainer}>
@@ -485,7 +485,7 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   navItem: {
-    flex: 1,
+    width: 100,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -496,7 +496,7 @@ const styles = StyleSheet.create({
     color: '#9CA3AF',
   },
   fabContainer: {
-    flex: 1,
+    width: 100,
     position: 'relative',
     top: -25,
     justifyContent: 'center',
