@@ -21,6 +21,7 @@ import {
 
 //Import do Formulario
 import CriarTreino from './CriarTreino';
+import TreinoMusculacao from './TreinoMusculacao';
 
 // --- IMPORTAÇÃO DOS SEUS ÍCONES SVG ---
 // Ajuste o caminho './Icons/...' se a pasta estiver em outro lugar dentro do seu projeto
@@ -121,6 +122,7 @@ const estatisticas = [
 
 export default function App() {
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalMusculacao, setModalMusculacao] = useState(false);
 
   let [fontsLoaded] = useFonts({
     Lexend_400Regular,
@@ -189,7 +191,10 @@ export default function App() {
                   </View>
                 )}
 
-                <TouchableOpacity style={[styles.button, { backgroundColor: treino.mainColor }]}>
+                <TouchableOpacity
+                  style={[styles.button, { backgroundColor: treino.mainColor }]}
+                  onPress={() => treino.id === '1' ? setModalMusculacao(true) : undefined}
+                >
                   <Text style={styles.buttonText}>{treino.textoBotao}</Text>
                 </TouchableOpacity>
               </View>
@@ -234,13 +239,21 @@ export default function App() {
           <Text style={styles.navLabel}>PROFILE</Text>
         </TouchableOpacity>
 
-        <Modal 
+        <Modal
           transparent={false}
-          animationType="slide" 
+          animationType="slide"
           visible={modalVisible}
         >
-        <CriarTreino fechar={() => setModalVisible(false)} />
-      </Modal>
+          <CriarTreino fechar={() => setModalVisible(false)} />
+        </Modal>
+
+        <Modal
+          transparent={false}
+          animationType="slide"
+          visible={modalMusculacao}
+        >
+          <TreinoMusculacao fechar={() => setModalMusculacao(false)} />
+        </Modal>
       </View>
     </SafeAreaView>
   );
