@@ -249,7 +249,7 @@ export default function App() {
 
         <Modal
           transparent={false}
-          animationType="slide"
+          animationType="none"
           visible={modalMusculacao}
         >
           <TreinoMusculacao fechar={() => setModalMusculacao(false)} />
@@ -448,7 +448,7 @@ const styles = StyleSheet.create({
     height: 80,
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingBottom: 15,
     shadowColor: '#000',
@@ -458,9 +458,9 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   navItem: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: 60,
   },
   navIconSpacing: {
     marginBottom: 4, // Adicionado para dar um respiro entre o SVG e o Texto na barra inferior
@@ -471,6 +471,7 @@ const styles = StyleSheet.create({
     color: '#9CA3AF',
   },
   fabContainer: {
+    flex: 1,
     position: 'relative',
     top: -25,
     justifyContent: 'center',

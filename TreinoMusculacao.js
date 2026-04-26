@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,8 @@ import {
   SafeAreaView,
   ScrollView,
   Image,
+  Animated,
+  Dimensions,
 } from 'react-native';
 
 // Ícones
@@ -16,12 +18,14 @@ import AddIcon        from './Icons/AddIcon.svg';
 import DumbellIconNav from './Icons/DumbellIconNav.svg';
 import ProfileIcon    from './Icons/ProfileIcon.svg';
 
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+
 // ==========================================
 // DADOS DO TREINO
 // ==========================================
 
 const aquecimento = [
-  { numero: '01', numeroColor: '#82E53A', nome: 'Contração escapular',         detalhe: '2 Sets x 15 Reps' },
+  { numero: '01', numeroColor: '#82E53A', nome: 'Contração escapular',          detalhe: '2 Sets x 15 Reps' },
   { numero: '02', numeroColor: '#F26522', nome: 'Alongamento dinâmico de peito', detalhe: '60 Seconds' },
 ];
 
@@ -83,152 +87,173 @@ const exercicios = [
 // ==========================================
 
 export default function TreinoMusculacao({ fechar }) {
+  // ── Animação: slide da direita para esquerda
+  const slideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current;
+
+  // Entra da direita ao montar
+  useEffect(() => {
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 320,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
+  // Sai para a direita ao fechar, depois chama fechar()
+  const handleFechar = () => {
+    Animated.timing(slideAnim, {
+      toValue: SCREEN_WIDTH,
+      duration: 260,
+      useNativeDriver: true,
+    }).start(() => fechar());
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <Animated.View style={{ flex: 1, transform: [{ translateX: slideAnim }] }}>
+      <SafeAreaView style={styles.container}>
 
-      {/* ── CABEÇALHO ── */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={fechar} style={styles.backButton}>
-          <ArrowIcon width={22} height={22} fill="#1A1C29" />
-        </TouchableOpacity>
-        <Text style={styles.logoTitle}>KINETIC</Text>
-        <View style={{ width: 32 }} />
-      </View>
-
-      {/* ── CONTEÚDO ── */}
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-
-        {/* TÍTULO */}
-        <View style={styles.titleContainer}>
-          <Text style={styles.mainTitle}>MUSCULAÇÃO</Text>
-          <Text style={styles.subtitle}>
-            Treino com foco em hipertrofia, realizado com uso de pesos ou máquinas destinado para cada grupo muscular.
-          </Text>
+        {/* ── CABEÇALHO ── */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={handleFechar} style={styles.backButton}>
+            <ArrowIcon width={22} height={22} fill="#1A1C29" />
+          </TouchableOpacity>
+          <Text style={styles.logoTitle}>KINETIC</Text>
+          <View style={{ width: 32 }} />
         </View>
 
-        {/* ── ESTATÍSTICAS: 2 cards individuais ── */}
-        <View style={styles.statsRow}>
-          <View style={styles.statCard}>
-            <Text style={styles.statLabel}>DURAÇÃO</Text>
-            <Text style={styles.statValue}>60<Text style={styles.statUnit}>min</Text></Text>
-          </View>
-          <View style={styles.statCard}>
-            <Text style={styles.statLabel}>CALORIAS</Text>
-            <Text style={styles.statValue}>450<Text style={styles.statUnit}>kcal</Text></Text>
-          </View>
-        </View>
+        {/* ── CONTEÚDO ── */}
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
 
-        {/* ── DICA DE TREINADOR ── */}
-        <View style={styles.tipCard}>
-          <View style={styles.tipHeader}>
-            <LightningIcon width={16} height={16} fill="#FFFFFF" style={{ marginRight: 8 }} />
-            <Text style={styles.tipTitle}>DICA DE TREINADOR</Text>
+          {/* TÍTULO */}
+          <View style={styles.titleContainer}>
+            <Text style={styles.mainTitle}>MUSCULAÇÃO</Text>
+            <Text style={styles.subtitle}>
+              Treino com foco em hipertrofia, realizado com uso de pesos ou máquinas destinado para cada grupo muscular.
+            </Text>
           </View>
-          <Text style={styles.tipText}>
-            Se concentre na fase excêntrica dos movimentos de empurra.
-          </Text>
-        </View>
 
-        {/* ── AQUECIMENTO: card único contendo os itens ── */}
-        <Text style={styles.sectionTitle}>AQUECIMENTO</Text>
-        <View style={styles.warmupCard}>
-          {aquecimento.map((item, index) => (
-            <View
-              key={index}
-              style={[
-                styles.warmupRow,
-                index < aquecimento.length - 1 && styles.warmupRowBorder,
-              ]}
-            >
-              <Text style={[styles.warmupNumber, { color: item.numeroColor }]}>
-                {item.numero}
-              </Text>
-              <View style={styles.warmupTextBlock}>
-                <Text style={styles.warmupName}>{item.nome}</Text>
-                <Text style={styles.warmupDetail}>{item.detalhe}</Text>
+          {/* ── ESTATÍSTICAS: 2 cards individuais ── */}
+          <View style={styles.statsRow}>
+            <View style={styles.statCard}>
+              <Text style={styles.statLabel}>DURAÇÃO</Text>
+              <Text style={styles.statValue}>60<Text style={styles.statUnit}>min</Text></Text>
+            </View>
+            <View style={styles.statCard}>
+              <Text style={styles.statLabel}>CALORIAS</Text>
+              <Text style={styles.statValue}>450<Text style={styles.statUnit}>kcal</Text></Text>
+            </View>
+          </View>
+
+          {/* ── DICA DE TREINADOR ── */}
+          <View style={styles.tipCard}>
+            <View style={styles.tipHeader}>
+              <LightningIcon width={16} height={16} fill="#FFFFFF" />
+              <Text style={styles.tipTitle}>DICA DE TREINADOR</Text>
+            </View>
+            <Text style={styles.tipText}>
+              Se concentre na fase excêntrica dos movimentos de empurra.
+            </Text>
+          </View>
+
+          {/* ── AQUECIMENTO: card único contendo os itens ── */}
+          <Text style={styles.sectionTitle}>AQUECIMENTO</Text>
+          <View style={styles.warmupCard}>
+            {aquecimento.map((item, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.warmupRow,
+                  index < aquecimento.length - 1 && styles.warmupRowBorder,
+                ]}
+              >
+                <Text style={[styles.warmupNumber, { color: item.numeroColor }]}>
+                  {item.numero}
+                </Text>
+                <View style={styles.warmupTextBlock}>
+                  <Text style={styles.warmupName}>{item.nome}</Text>
+                  <Text style={styles.warmupDetail}>{item.detalhe}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+
+          {/* ── CARDS DE EXERCÍCIO ── */}
+          {exercicios.map((ex) => (
+            <View key={ex.id} style={styles.exerciseCard}>
+
+              <Image
+                source={{ uri: ex.imagem }}
+                style={styles.exerciseImage}
+                resizeMode="cover"
+              />
+
+              <Text style={styles.exerciseName}>{ex.nome}</Text>
+              <View style={styles.exerciseTags}>
+                <Text style={styles.tagBlue}>{ex.tag1}</Text>
+                <Text style={styles.tagDot}> • </Text>
+                <Text style={styles.tagBlue}>{ex.tag2}</Text>
+              </View>
+
+              {/* Stats: 3 cards individuais */}
+              <View style={styles.exerciseStatsRow}>
+
+                <View style={styles.exerciseStatCard}>
+                  <View style={styles.exerciseStatAccent} />
+                  <View style={styles.exerciseStatContent}>
+                    <Text style={styles.exerciseStatLabel}>SETS</Text>
+                    <Text style={styles.exerciseStatValue}>{ex.series}</Text>
+                  </View>
+                </View>
+
+                <View style={styles.exerciseStatCard}>
+                  <View style={styles.exerciseStatContent}>
+                    <Text style={styles.exerciseStatLabel}>REPS</Text>
+                    <Text style={styles.exerciseStatValue}>{ex.reps}</Text>
+                  </View>
+                </View>
+
+                <View style={styles.exerciseStatCard}>
+                  <View style={styles.exerciseStatContent}>
+                    <Text style={styles.exerciseStatLabel}>DESCANSO</Text>
+                    <Text style={styles.exerciseStatValue}>{ex.descanso}</Text>
+                  </View>
+                </View>
+
               </View>
             </View>
           ))}
-        </View>
 
-        {/* ── CARDS DE EXERCÍCIO ── */}
-        {exercicios.map((ex) => (
-          <View key={ex.id} style={styles.exerciseCard}>
+          {/* ── BOTÃO COMEÇAR TREINO ── */}
+          <TouchableOpacity style={styles.startButton} activeOpacity={0.85}>
+            <Text style={styles.startButtonText}>▶  COMEÇAR TREINO</Text>
+          </TouchableOpacity>
 
-            {/* Imagem com bordas arredondadas */}
-            <Image
-              source={{ uri: ex.imagem }}
-              style={styles.exerciseImage}
-              resizeMode="cover"
-            />
+        </ScrollView>
 
-            {/* Nome + tags */}
-            <Text style={styles.exerciseName}>{ex.nome}</Text>
-            <View style={styles.exerciseTags}>
-              <Text style={styles.tagBlue}>{ex.tag1}</Text>
-              <Text style={styles.tagDot}> • </Text>
-              <Text style={styles.tagBlue}>{ex.tag2}</Text>
-            </View>
+        {/* ── BOTTOM NAVIGATION ── */}
+        <View style={styles.bottomNav}>
+          <TouchableOpacity style={styles.navItem}>
+            <DumbellIconNav width={24} height={24} color="#9CA3AF" style={styles.navIconSpacing} />
+            <Text style={styles.navLabel}>TRAIN</Text>
+          </TouchableOpacity>
 
-            {/* ── Stats do exercício: 3 cards individuais ── */}
-            <View style={styles.exerciseStatsRow}>
-
-              <View style={styles.exerciseStatCard}>
-                <View style={styles.exerciseStatAccent} />
-                <View style={styles.exerciseStatContent}>
-                  <Text style={styles.exerciseStatLabel}>SETS</Text>
-                  <Text style={styles.exerciseStatValue}>{ex.series}</Text>
-                </View>
-              </View>
-
-              <View style={styles.exerciseStatCard}>
-                <View style={styles.exerciseStatContent}>
-                  <Text style={styles.exerciseStatLabel}>REPS</Text>
-                  <Text style={styles.exerciseStatValue}>{ex.reps}</Text>
-                </View>
-              </View>
-
-              <View style={styles.exerciseStatCard}>
-                <View style={styles.exerciseStatContent}>
-                  <Text style={styles.exerciseStatLabel}>DESCANSO</Text>
-                  <Text style={styles.exerciseStatValue}>{ex.descanso}</Text>
-                </View>
-              </View>
-
-            </View>
+          <View style={styles.fabContainer}>
+            <TouchableOpacity style={styles.fab}>
+              <AddIcon width={20} height={20} fill="#FFFFFF" />
+            </TouchableOpacity>
           </View>
-        ))}
 
-        {/* ── BOTÃO COMEÇAR TREINO ── */}
-        <TouchableOpacity style={styles.startButton} activeOpacity={0.85}>
-          <Text style={styles.startButtonText}>▶  COMEÇAR TREINO</Text>
-        </TouchableOpacity>
-
-      </ScrollView>
-
-      {/* ── BOTTOM NAVIGATION (igual à tela principal) ── */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-          <DumbellIconNav width={24} height={24} color="#9CA3AF" style={styles.navIconSpacing} />
-          <Text style={styles.navLabel}>TRAIN</Text>
-        </TouchableOpacity>
-
-        <View style={styles.fabContainer}>
-          <TouchableOpacity style={styles.fab}>
-            <AddIcon width={20} height={20} fill="#FFFFFF" />
+          <TouchableOpacity style={styles.navItem}>
+            <ProfileIcon width={24} height={24} fill="#9CA3AF" style={styles.navIconSpacing} />
+            <Text style={styles.navLabel}>PROFILE</Text>
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.navItem}>
-          <ProfileIcon width={24} height={24} fill="#9CA3AF" style={styles.navIconSpacing} />
-          <Text style={styles.navLabel}>PROFILE</Text>
-        </TouchableOpacity>
-      </View>
-
-    </SafeAreaView>
+      </SafeAreaView>
+    </Animated.View>
   );
 }
 
@@ -248,17 +273,33 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
   backButton: { padding: 5 },
-  logoTitle: { fontSize: 20, color: '#005CEE', fontWeight: '900', letterSpacing: 1 },
+  logoTitle: {
+    fontFamily: 'Lexend_900Black',
+    fontSize: 20,
+    color: '#005CEE',
+    letterSpacing: 1,
+  },
 
   // ── Scroll
   scrollContent: { paddingHorizontal: 20, paddingBottom: 110 },
 
   // ── Título
   titleContainer: { marginTop: 10, marginBottom: 20 },
-  mainTitle: { fontSize: 42, color: '#1A1C29', fontWeight: '900', lineHeight: 46, marginBottom: 10 },
-  subtitle: { fontSize: 14, color: '#6B7280', lineHeight: 22 },
+  mainTitle: {
+    fontFamily: 'Lexend_900Black',
+    fontSize: 42,
+    color: '#1A1C29',
+    lineHeight: 46,
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontFamily: 'Lexend_400Regular',
+    fontSize: 14,
+    color: '#6B7280',
+    lineHeight: 22,
+  },
 
-  // ── Estatísticas: 2 cards independentes lado a lado
+  // ── Estatísticas
   statsRow: { flexDirection: 'row', gap: 12, marginBottom: 16 },
   statCard: {
     flex: 1,
@@ -271,9 +312,23 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 1,
   },
-  statLabel: { fontSize: 11, color: '#9CA3AF', fontWeight: 'bold', letterSpacing: 1, marginBottom: 4 },
-  statValue: { fontSize: 28, color: '#1A1C29', fontWeight: '900' },
-  statUnit: { fontSize: 14, color: '#9CA3AF', fontWeight: 'bold' },
+  statLabel: {
+    fontFamily: 'Lexend_700Bold',
+    fontSize: 11,
+    color: '#9CA3AF',
+    letterSpacing: 1,
+    marginBottom: 4,
+  },
+  statValue: {
+    fontFamily: 'Lexend_900Black',
+    fontSize: 28,
+    color: '#1A1C29',
+  },
+  statUnit: {
+    fontFamily: 'Lexend_700Bold',
+    fontSize: 14,
+    color: '#9CA3AF',
+  },
 
   // ── Dica de Treinador
   tipCard: {
@@ -283,12 +338,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     marginBottom: 28,
   },
-  tipHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
-  tipTitle: { fontSize: 11, color: 'rgba(255,255,255,0.75)', fontWeight: 'bold', letterSpacing: 1.2, marginLeft: 8 },
-  tipText: { fontSize: 14, color: '#FFFFFF', lineHeight: 22 },
+  tipHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 },
+  tipTitle: {
+    fontFamily: 'Lexend_800ExtraBold',
+    fontSize: 11,
+    color: 'rgba(255,255,255,0.80)',
+    letterSpacing: 1.2,
+  },
+  tipText: {
+    fontFamily: 'Lexend_400Regular',
+    fontSize: 14,
+    color: '#FFFFFF',
+    lineHeight: 22,
+  },
 
   // ── Aquecimento
-  sectionTitle: { fontSize: 12, fontWeight: 'bold', color: '#9CA3AF', letterSpacing: 1.5, marginBottom: 12 },
+  sectionTitle: {
+    fontFamily: 'Lexend_800ExtraBold',
+    fontSize: 12,
+    color: '#9CA3AF',
+    letterSpacing: 1.5,
+    marginBottom: 12,
+  },
   warmupCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
@@ -301,10 +372,10 @@ const styles = StyleSheet.create({
   },
   warmupRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 18 },
   warmupRowBorder: { borderBottomWidth: 1, borderBottomColor: '#F3F4F6' },
-  warmupNumber: { fontSize: 22, fontWeight: '900', width: 44 },
+  warmupNumber: { fontFamily: 'Lexend_900Black', fontSize: 22, width: 44 },
   warmupTextBlock: { flex: 1 },
-  warmupName: { fontSize: 15, color: '#1A1C29', fontWeight: 'bold', marginBottom: 3 },
-  warmupDetail: { fontSize: 13, color: '#9CA3AF' },
+  warmupName: { fontFamily: 'Lexend_700Bold', fontSize: 15, color: '#1A1C29', marginBottom: 3 },
+  warmupDetail: { fontFamily: 'Lexend_400Regular', fontSize: 13, color: '#9CA3AF' },
 
   // ── Exercise Card
   exerciseCard: {
@@ -323,12 +394,28 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     marginBottom: 14,
   },
-  exerciseName: { fontSize: 20, color: '#1A1C29', fontWeight: '900', marginBottom: 4, letterSpacing: 0.3 },
+  exerciseName: {
+    fontFamily: 'Lexend_900Black',
+    fontSize: 20,
+    color: '#1A1C29',
+    marginBottom: 4,
+    letterSpacing: 0.3,
+  },
   exerciseTags: { flexDirection: 'row', alignItems: 'center', marginBottom: 14 },
-  tagBlue: { fontSize: 11, color: '#005CEE', fontWeight: 'bold', letterSpacing: 0.5 },
-  tagDot: { fontSize: 13, color: '#005CEE', fontWeight: 'bold', marginHorizontal: 3 },
+  tagBlue: {
+    fontFamily: 'Lexend_800ExtraBold',
+    fontSize: 11,
+    color: '#005CEE',
+    letterSpacing: 0.5,
+  },
+  tagDot: {
+    fontFamily: 'Lexend_800ExtraBold',
+    fontSize: 13,
+    color: '#005CEE',
+    marginHorizontal: 2,
+  },
 
-  // ── Stats do exercício: 3 cards independentes
+  // ── Stats do exercício: 3 cards individuais
   exerciseStatsRow: { flexDirection: 'row', gap: 8 },
   exerciseStatCard: {
     flex: 1,
@@ -346,8 +433,18 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   exerciseStatContent: { flex: 1 },
-  exerciseStatLabel: { fontSize: 9, color: '#9CA3AF', fontWeight: 'bold', letterSpacing: 1, marginBottom: 4 },
-  exerciseStatValue: { fontSize: 20, color: '#1A1C29', fontWeight: '900' },
+  exerciseStatLabel: {
+    fontFamily: 'Lexend_800ExtraBold',
+    fontSize: 9,
+    color: '#9CA3AF',
+    letterSpacing: 1,
+    marginBottom: 4,
+  },
+  exerciseStatValue: {
+    fontFamily: 'Lexend_900Black',
+    fontSize: 20,
+    color: '#1A1C29',
+  },
 
   // ── Botão Começar
   startButton: {
@@ -362,7 +459,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 6 },
     elevation: 6,
   },
-  startButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: 'bold', letterSpacing: 1.2 },
+  startButtonText: {
+    fontFamily: 'Lexend_800ExtraBold',
+    color: '#FFFFFF',
+    fontSize: 16,
+    letterSpacing: 1.2,
+  },
 
   // ── Bottom Navigation
   bottomNav: {
@@ -373,7 +475,7 @@ const styles = StyleSheet.create({
     height: 80,
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingBottom: 15,
     shadowColor: '#000',
@@ -382,10 +484,24 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 10,
   },
-  navItem: { alignItems: 'center', justifyContent: 'center', width: 60 },
+  navItem: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   navIconSpacing: { marginBottom: 4 },
-  navLabel: { fontSize: 10, color: '#9CA3AF', fontWeight: 'bold' },
-  fabContainer: { position: 'relative', top: -25, justifyContent: 'center', alignItems: 'center' },
+  navLabel: {
+    fontFamily: 'Lexend_700Bold',
+    fontSize: 10,
+    color: '#9CA3AF',
+  },
+  fabContainer: {
+    flex: 1,
+    position: 'relative',
+    top: -25,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   fab: {
     width: 60,
     height: 60,
