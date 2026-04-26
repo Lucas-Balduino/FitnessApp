@@ -74,6 +74,7 @@ export default function CriarTreino({ fechar }) {
   // --- ESTADOS DO FORMULÁRIO ---
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
+  const [calorias, setCalorias] = useState('');
   const [notas, setNotas] = useState('');
   
   // Estados dos Switches
@@ -154,6 +155,38 @@ export default function CriarTreino({ fechar }) {
               value={descricao}
               onChangeText={setDescricao}
             />
+          </View>
+
+          {/* Row: Calorias + Notas */}
+          <View style={styles.inputRow}>
+            <View style={[styles.inputCard, styles.inputRowItem]}>
+              <Text style={styles.inputLabel}>CAL ESTIMADAS</Text>
+              <View style={styles.calWrapper}>
+                <TextInput
+                  style={[styles.textInput, styles.calInput]}
+                  placeholder="450"
+                  placeholderTextColor="#D1D5DB"
+                  keyboardType="numeric"
+                  value={calorias}
+                  onChangeText={setCalorias}
+                />
+                {calorias.length > 0 && (
+                  <Text style={styles.calUnit}>KCAL</Text>
+                )}
+              </View>
+            </View>
+
+            <View style={[styles.inputCard, styles.inputRowItem]}>
+              <Text style={styles.inputLabel}>NOTAS</Text>
+              <TextInput
+                style={[styles.textInput, styles.notasInput]}
+                placeholder="Privado..."
+                placeholderTextColor="#D1D5DB"
+                multiline
+                value={notas}
+                onChangeText={setNotas}
+              />
+            </View>
           </View>
         </View>
 
@@ -285,6 +318,12 @@ const styles = StyleSheet.create({
   inputCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 15, marginBottom: 15, shadowColor: '#000', shadowOpacity: 0.02, shadowRadius: 8, elevation: 1 },
   inputLabel: { fontSize: 12, fontWeight: 'bold', color: '#9CA3AF', letterSpacing: 1, marginBottom: 5 },
   textInput: { fontSize: 18, color: '#1A1C29', fontWeight: 'bold' },
+  inputRow: { flexDirection: 'row', gap: 12, marginBottom: 0 },
+  inputRowItem: { flex: 1, marginBottom: 0 },
+  calWrapper: { position: 'relative', justifyContent: 'center' },
+  calInput: { fontSize: 28, paddingRight: 36 },
+  calUnit: { position: 'absolute', right: 0, bottom: 4, fontSize: 11, fontWeight: 'bold', color: '#9CA3AF', letterSpacing: 1 },
+  notasInput: { fontSize: 15, minHeight: 44 },
   
   subLabel: { fontSize: 12, fontWeight: 'bold', color: '#9CA3AF', letterSpacing: 1, marginBottom: 8, marginLeft: 5 },
   pickerCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 18, marginBottom: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
