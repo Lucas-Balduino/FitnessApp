@@ -1,3 +1,6 @@
+pip install npm
+npm install npx
+npm install expo
 npx expo install react-dom react-native-web  
 npm install @react-native-picker/picker @react-native-community/slider
 npx expo install expo-font @expo-google-fonts/lexend
