@@ -22,6 +22,11 @@ import {
 //Import do Formulario
 import CriarTreino from './CriarTreino';
 import TreinoMusculacao from './TreinoMusculacao';
+import TreinoCiclismo from './TreinoCiclismo';
+import TreinoCorrida from './TreinoCorrida';
+import TreinoFutebol from './TreinoFutebol';
+import TreinoVolei from './TreinoVolei';
+import TreinoNatacao from './TreinoNatacao';
 
 // --- IMPORTAÇÃO DOS SEUS ÍCONES SVG ---
 // Ajuste o caminho './Icons/...' se a pasta estiver em outro lugar dentro do seu projeto
@@ -123,6 +128,11 @@ const estatisticas = [
 export default function App() {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMusculacao, setModalMusculacao] = useState(false);
+  const [modalCiclismo, setModalCiclismo] = useState(false);
+  const [modalCorrida, setModalCorrida] = useState(false);
+  const [modalFutebol, setModalFutebol] = useState(false);
+  const [modalVolei, setModalVolei] = useState(false);
+  const [modalNatacao, setModalNatacao] = useState(false);
 
   let [fontsLoaded] = useFonts({
     Lexend_400Regular,
@@ -193,7 +203,15 @@ export default function App() {
 
                 <TouchableOpacity
                   style={[styles.button, { backgroundColor: treino.mainColor }]}
-                  onPress={() => treino.id === '1' ? setModalMusculacao(true) : undefined}
+                  onPress={() => {
+                    if (treino.id === '1') setModalMusculacao(true);
+                    else if (treino.id === '2') setModalCiclismo(true);
+                    else if (treino.id === '3') setModalCorrida(true);
+                    else if (treino.id === '4') setModalFutebol(true);
+                    else if (treino.id === '5') setModalVolei(true);
+                    else if (treino.id === '6') setModalNatacao(true);
+                    else if (treino.id === '7') setModalVisible(true);
+                  }}
                 >
                   <Text style={styles.buttonText}>{treino.textoBotao}</Text>
                 </TouchableOpacity>
@@ -253,6 +271,26 @@ export default function App() {
           visible={modalMusculacao}
         >
           <TreinoMusculacao fechar={() => setModalMusculacao(false)} />
+        </Modal>
+
+        <Modal transparent={false} animationType="none" visible={modalCiclismo}>
+          <TreinoCiclismo fechar={() => setModalCiclismo(false)} />
+        </Modal>
+
+        <Modal transparent={false} animationType="none" visible={modalCorrida}>
+          <TreinoCorrida fechar={() => setModalCorrida(false)} />
+        </Modal>
+
+        <Modal transparent={false} animationType="none" visible={modalFutebol}>
+          <TreinoFutebol fechar={() => setModalFutebol(false)} />
+        </Modal>
+
+        <Modal transparent={false} animationType="none" visible={modalVolei}>
+          <TreinoVolei fechar={() => setModalVolei(false)} />
+        </Modal>
+
+        <Modal transparent={false} animationType="none" visible={modalNatacao}>
+          <TreinoNatacao fechar={() => setModalNatacao(false)} />
         </Modal>
       </View>
     </SafeAreaView>
