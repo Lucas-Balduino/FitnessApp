@@ -20,13 +20,13 @@ import {
 } from '@expo-google-fonts/lexend';
 
 //Import do Formulario
-import CriarTreino from './CriarTreino';
-import TreinoMusculacao from './TreinoMusculacao';
-import TreinoCiclismo from './TreinoCiclismo';
-import TreinoCorrida from './TreinoCorrida';
-import TreinoFutebol from './TreinoFutebol';
-import TreinoVolei from './TreinoVolei';
-import TreinoNatacao from './TreinoNatacao';
+import CriarTreino from './src/screens/CriarTreino';
+import TreinoMusculacao from './src/screens/TreinoMusculacao';
+import TreinoCiclismo from './src/screens/TreinoCiclismo';
+import TreinoCorrida from './src/screens/TreinoCorrida';
+import TreinoFutebol from './src/screens/TreinoFutebol';
+import TreinoVolei from './src/screens/TreinoVolei';
+import TreinoNatacao from './src/screens/TreinoNatacao';
 
 // --- IMPORTAÇÃO DOS SEUS ÍCONES SVG ---
 // Ajuste o caminho './Icons/...' se a pasta estiver em outro lugar dentro do seu projeto
