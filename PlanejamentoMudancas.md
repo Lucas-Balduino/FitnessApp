@@ -32,12 +32,6 @@ Com o hook planejado, as telas de modalidades (`TreinoCorrida.js`, `TreinoMuscul
 3. Vincular o valor animado retornado pelo hook diretamente ao estilo do container principal (`Animated.View`).
 4. Substituir a chamada direta da prop `fechar()` no botão de retorno pela função de saída tratada pelo hook.
 
-> 💡 **Ganho Arquitetural:** Com essa mudança, você elimina cerca de 20 a 30 linhas de código repetido de cada uma das 6 telas de treino, centraliza o controle de tempo das transições em um único lugar e cumpre o requisito de forma elegante e performática.
-
-Com base na análise do arquivo `App.js` e na arquitetura atual do projeto **Kinetic**, fiz a avaliação técnica em relação ao requisito de **Navegação**.
-
-Atualmente, o projeto gerencia a alternância de telas e a exibição dos treinos utilizando o componente nativo `<Modal>` do React Native e renderização condicional por estados (`useState`). Portanto, para uma avaliação que exige estritamente a biblioteca oficial de navegação, o cenário atual e o plano de reestruturação são os seguintes:
-
 ---
 
 ## Reestruturação da Navegação
