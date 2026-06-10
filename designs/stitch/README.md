@@ -48,10 +48,10 @@ Documentos complementares:
 
 Marque quando exportar e salvar cada PNG:
 
-- [ ] `01-login.png`
-- [ ] `01-login-registro.png` (opcional)
-- [ ] `02-perfil.png`
-- [ ] `03-drawer.png`
-- [ ] `04-biblioteca-lista.png`
-- [ ] `05-biblioteca-loading.png`
-- [ ] `06-detalhe-exercicio.png`
+- [x] `01-login.png`
+- [x] `01-login-registro.png` (opcional)
+- [x] `02-perfil.png`
+- [x] `03-drawer.png`
+- [x] `04-biblioteca-lista.png`
+- [x] `05-biblioteca-loading.png`
+- [x] `06-detalhe-exercicio.png`
