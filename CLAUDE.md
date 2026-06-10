@@ -41,10 +41,14 @@ npx expo start --web
 |---|---|
 | `PlanejamentoMudancas.md` | Roadmap de implementação por fases (ordem obrigatória) |
 | `DESIGN.md` | Design system completo (cores, tipografia, componentes) |
-| `PromptsStitch.md` | Referência visual das telas a criar |
+| `designs/stitch/*.png` | Mockups exportados do Stitch (referência visual por tela) |
+| `designs/stitch/README.md` | Mapeamento mockup → arquivo de código → fase |
+| `PromptsStitch.md` | Prompts usados para gerar os mockups no Stitch |
 | `README.md` | Visão geral e setup básico |
 
-**Prioridade:** `PlanejamentoMudancas.md` define *o que* e *em que ordem* implementar. `DESIGN.md` define *como* deve parecer.
+**Prioridade:** `PlanejamentoMudancas.md` define *o que* e *em que ordem* implementar. `DESIGN.md` define *como* deve parecer. `designs/stitch/` define *como ficou* cada tela no mockup.
+
+**Ao implementar UI:** ler o PNG correspondente em `designs/stitch/` (ex: `@designs/stitch/02-perfil.png`) junto com `DESIGN.md`.
 
 ---
 
@@ -350,6 +354,17 @@ Ao implementar telas novas, usar estas como modelo de estrutura e estilo:
 | Formulário | `src/screens/CriarTreino.js` | Inputs, sliders, switches, pickers, seções |
 
 Telas novas a criar: `LoginScreen`, `PerfilScreen`, `DetalhesTreino`, `BibliotecaScreen`, `DetalheExercicioScreen`, `CustomDrawerContent`.
+
+Mockups Stitch (PNG em `designs/stitch/`):
+
+| PNG | Tela |
+|---|---|
+| `01-login.png` | `LoginScreen.js` |
+| `02-perfil.png` | `PerfilScreen.js` |
+| `03-drawer.png` | `CustomDrawerContent.js` |
+| `04-biblioteca-lista.png` | `BibliotecaScreen.js` |
+| `05-biblioteca-loading.png` | estado loading da Biblioteca |
+| `06-detalhe-exercicio.png` | `DetalheExercicioScreen.js` |
 
 ---
 
