@@ -12,11 +12,11 @@ import {
 } from 'react-native';
 
 // Ícones
-import ArrowIcon from './Icons/ArrowIcon.svg';
-import LightningIcon from './Icons/LightningIcon.svg';
-import AddIcon from './Icons/AddIcon.svg';
-import DumbellIconNav from './Icons/DumbellIconNav.svg';
-import ProfileIcon from './Icons/ProfileIcon.svg';
+import ArrowIcon from '../Icons/ArrowIcon.svg';
+import LightningIcon from '../Icons/LightningIcon.svg';
+import AddIcon from '../Icons/AddIcon.svg';
+import DumbellIconNav from '../Icons/DumbellIconNav.svg';
+import ProfileIcon from '../Icons/ProfileIcon.svg';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
