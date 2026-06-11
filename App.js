@@ -30,16 +30,16 @@ import TreinoNatacao from './src/screens/TreinoNatacao';
 
 // --- IMPORTAÇÃO DOS SEUS ÍCONES SVG ---
 // Ajuste o caminho './Icons/...' se a pasta estiver em outro lugar dentro do seu projeto
-import AddIcon from './Icons/AddIcon.svg';
-import CiclismIcon from './Icons/CiclismIcon.svg';
-import CustumizeIcon from './Icons/CustumizeIcon.svg';
-import DumbellIcon from './Icons/DumbellIcon.svg';
-import DumbellIconNav from './Icons/DumbellIconNav.svg';
-import ProfileIcon from './Icons/ProfileIcon.svg';
-import RunningIcon from './Icons/RunningIcon.svg';
-import SoccerIcon from './Icons/SoccerIcon.svg';
-import SwimmingIcon from './Icons/SwimmingIcon.svg';
-import VolleyballIcon from './Icons/VolleyballIcon.svg';
+import AddIcon from './src/Icons/AddIcon.svg';
+import CiclismIcon from './src/Icons/CiclismIcon.svg';
+import CustumizeIcon from './src/Icons/CustumizeIcon.svg';
+import DumbellIcon from './src/Icons/DumbellIcon.svg';
+import DumbellIconNav from './src/Icons/DumbellIconNav.svg';
+import ProfileIcon from './src/Icons/ProfileIcon.svg';
+import RunningIcon from './src/Icons/RunningIcon.svg';
+import SoccerIcon from './src/Icons/SoccerIcon.svg';
+import SwimmingIcon from './src/Icons/SwimmingIcon.svg';
+import VolleyballIcon from './src/Icons/VolleyballIcon.svg';
 
 // --- DADOS MOCKADOS COMPLETOS ---
 const treinos = [
