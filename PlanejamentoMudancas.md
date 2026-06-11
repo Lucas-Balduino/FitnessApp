@@ -104,30 +104,18 @@ Coisas úteis que ainda dá para fazer **antes** da Fase 0, sem instalar depend�
 | Atualizar `README.md` (estrutura desatualizada) | ~10 min | Menos confusão | **FEITO** |
 | Tag/commit de backup antes do refactor | 1 min | Rollback fácil | Requer você |
 
-**Não recomendo ainda:** instalar React Navigation/Firebase, refatorar `App.js` ou implementar telas — isso é Fase 0+.
-
 ---
 
 ## Ordem sugerida antes de “Implementar Fase 0”
 
 ```
-1. npx expo start          → confirmar que o app abre hoje
-2. Corrigir ícones         → paths Treino*.js + SVGs faltantes
-3. Criar babel.config.js   → preset Expo
-4. Branch git              → refactor/navigation
-5. (Opcional) Notas mockups no README de designs
-6. Iniciar Fase 0.1        → expo install navigation + reanimated
+1. npx expo start          → confirmar que o app abre hoje  **FEITO**
+2. Corrigir ícones         → paths Treino*.js + SVGs faltantes **FEITO**
+3. Criar babel.config.js   → preset Expo **FEITO**
+4. Branch git              → fase-0 **FEITO**
+5. (Opcional) Notas mockups no README de designs **FEITO**
+6. Iniciar Fase 0.1        → expo install navigation + reanimated **FEITO**
 ```
-
----
-
-## Conclusão
-
-**Pode começar a Fase 0** — mockups e docs estão prontos.
-
-Antes de codar navegação, vale **~30 min de preparação** nos bugs de ícones, `babel.config.js` e notas dos mockups (login/registro em duas telas). Firebase e Wger podem ficar para as fases 5 e 6.
-
-Quer que eu execute agora a preparação técnica (corrigir imports, `babel.config.js`, pastas e notas nos mockups)? Posso fazer isso sem iniciar a Fase 0 completa.
 
 ---
 
@@ -177,24 +165,24 @@ App.js (ponto de entrada enxuto)
 
 ### Etapa 0.1 — Instalar dependências de navegação
 
-- [ ] Executar via Expo (garante versões compatíveis com SDK 55):
+- [x] Executar via Expo (garante versões compatíveis com SDK 55):
   ```bash
   npx expo install @react-navigation/native @react-navigation/stack @react-navigation/drawer
   npx expo install react-native-screens react-native-safe-area-context react-native-gesture-handler react-native-reanimated
   ```
-- [ ] Adicionar plugin do Reanimated em `babel.config.js`:
+- [x] Adicionar plugin do Reanimated em `babel.config.js`:
   ```js
   plugins: ['react-native-reanimated/plugin']
   ```
-- [ ] Importar `react-native-gesture-handler` no topo de `index.js` (antes de tudo).
+- [x] Importar `react-native-gesture-handler` no topo de `index.js` (antes de tudo).
 
 ### Etapa 0.2 — Instalar Firebase (SDK JS para Expo)
 
-- [ ] Instalar: `npx expo install firebase`
-- [ ] Criar projeto no [Firebase Console](https://console.firebase.google.com)
-- [ ] Habilitar **Authentication → Email/Senha**
-- [ ] Criar banco **Firestore** (modo teste inicialmente)
-- [ ] Preencher `firebaseConfig.js` com as chaves públicas e exportar `auth` e `db`
+- [x] Instalar: `npx expo install firebase`
+- [x] Criar projeto no [Firebase Console](https://console.firebase.google.com)
+- [x] Habilitar **Authentication → Email/Senha**
+- [x] Criar banco **Firestore** (modo teste inicialmente)
+- [x] Preencher `firebaseConfig.js` com as chaves públicas e exportar `auth` e `db`
 
 ### Etapa 0.3 — Criar estrutura de pastas
 
@@ -230,10 +218,10 @@ src/
 
 ### Etapa 0.4 — Extrair conteúdo do App.js
 
-- [ ] Mover array `treinos` para `src/data/treinos.js`
-- [ ] Mover array `estatisticas` para `src/data/estatisticas.js`
-- [ ] Mover JSX + estilos do Dashboard para `src/screens/Dashboard.js`
-- [ ] Deixar `App.js` responsável apenas por: carregar fontes, listener de auth e renderizar o navegador raiz
+- [x] Mover array `treinos` para `src/data/treinos.js`
+- [x] Mover array `estatisticas` para `src/data/estatisticas.js`
+- [x] Mover JSX + estilos do Dashboard para `src/screens/Dashboard.js`
+- [x] Deixar `App.js` responsável apenas por: carregar fontes, listener de auth e renderizar o navegador raiz
 
 **Critério de conclusão:** app continua funcionando como antes (ainda com modais), mas com `App.js` < 80 linhas e dados em arquivos separados.
 
