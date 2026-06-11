@@ -21,6 +21,14 @@ Mockups exportados do **Stitch** para referência visual na implementação das 
 | `05-biblioteca-loading.png` | estado `carregando` em `BibliotecaScreen.js` | 6 | Prompt #5 |
 | `06-detalhe-exercicio.png` | `src/screens/DetalheExercicioScreen.js` | 6 | Prompt #6 |
 
+## Deltas dos Mockups vs Plano (Notas para Implementação)
+
+Os mockups possuem pequenas divergências visuais/lógicas do plano original. Durante a codificação, siga estas ressalvas:
+
+- **LoginScreen (`01-login.png`):** O fluxo real terá dois modos (Entrar e Registrar). No mockup base de Login (`01-login.png`), o botão CTA principal (azul) está com texto "REGISTRAR". Na implementação da Fase 4, **corrija o texto do CTA para "ENTRAR"**, pois é a tela de login.
+- **PerfilScreen (`02-perfil.png`):** O menu "Hamburger" (☰) no canto superior esquerdo aparece preto no mockup. **Siga a cor `#005CEE`** especificada no `DESIGN.md`.
+- **BibliotecaScreen (`04-biblioteca-lista.png`):** Os chips de categorias parecem não caber totalmente na tela. Garanta que a fileira de categorias use um `ScrollView` horizontal para evitar quebra de layout.
+
 ## Telas que NÃO precisam de mockup Stitch
 
 | Tela | Referência |

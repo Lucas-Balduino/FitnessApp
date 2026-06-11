@@ -3,6 +3,132 @@
 > Documento de referência de tarefas, organizado na **ordem de implementação**.
 > Cada fase depende da anterior. Marque `[x]` conforme concluir.
 
+--- 
+
+## O que já está pronto
+
+| Item | Status |
+|---|---|
+| Mockups Stitch (7 PNGs + registro) | Completos em `designs/stitch/` |
+| Commit no Git | `db69f9c` — imagens versionadas |
+| `DESIGN.md`, `CLAUDE.md`, `PlanejamentoMudancas.md` | Alinhados |
+| Checklist do `designs/stitch/README.md` | Marcado |
+| Telas regentes (Dashboard, Treino*, CriarTreino) | Código existente |
+| `assets/` (ícones Expo) | Presente |
+
+Documentação e referência visual estão em bom estado para começar a Fase 0.
+
+---
+
+## Avaliação dos mockups vs. plano
+
+Os designs seguem bem o KINETIC. Há alguns detalhes a registrar antes de codar:
+
+### Login — mais rico que o plano original
+
+| Elemento | Mockup | Impacto no código |
+|---|---|---|
+| `01-login.png` | Botão **REGISTRAR**, link “Criar conta”, “Esqueceu a senha?”, toggle de senha, termos legais | Login e registro são fluxos distintos na UI |
+| `01-login-registro.png` | Tela separada com campo **NOME** + email + senha | `LoginScreen` com 2 modos ou 2 rotas no Auth Stack |
+| Botão login | No mockup de login o CTA principal diz “REGISTRAR” | Provável erro do Stitch — implementar **ENTRAR** no modo login |
+
+**Recomendação:** seguir os dois PNGs, mas corrigir o CTA do modo login para “ENTRAR”.
+
+### Perfil — alinhado
+
+Corresponde ao `CriarTreino` (cards, switches, picker). Hamburger no mockup está **preto**; no `DESIGN.md` é `#005CEE` — priorizar o mockup ou padronizar no azul.
+
+### Drawer — alinhado
+
+Início (ativo), Biblioteca, Perfil, Sair, header com avatar, `KINETIC v1.0`. Só o painel, sem Dashboard ao fundo — suficiente para o `CustomDrawerContent`.
+
+### Biblioteca + loading + detalhe — alinhados
+
+Lista, chips, busca, loading e detalhe batem com Fase 6. Chip “Ombros” cortado na lista — implementar scroll horizontal nos chips.
+
+---
+
+## Gaps técnicos no código (corrigir cedo)
+
+### 1. Imports de ícones quebrados nas telas `Treino*.js`
+
+As 6 telas em `src/screens/` importam `./Icons/...`, mas `Icons/` está na raiz. Caminho correto: `../../Icons/...`.
+
+Hoje o app pode falhar ao abrir modais de treino. **Corrigir na Fase 0**, antes ou junto da extração do Dashboard.
+
+### 2. Ícones ausentes no `App.js`
+
+`App.js` importa `SwimmingIcon.svg` e `VolleyballIcon.svg`, mas **não existem** em `Icons/` (só 10 SVGs). Cards de Natação e Voleibol podem quebrar.
+
+**Ação:** adicionar os SVGs ou reutilizar ícones existentes temporariamente.
+
+### 3. `babel.config.js` ausente
+
+Expo funciona com default implícito, mas **Reanimated exige** `babel.config.js` com o plugin na Fase 0.1. Criar antes de instalar navegação.
+
+### 4. `firebaseConfig.js` vazio
+
+Esperado até a Fase 5. Para não travar depois, vale criar o projeto no Firebase Console **antes** da Fase 5 (Auth email/senha + Firestore).
+
+---
+
+## Preparação externa (sua parte)
+
+| Tarefa | Quando | Por quê |
+|---|---|---|
+| Criar projeto Firebase | Antes da Fase 5 | Auth + Firestore |
+| Habilitar Email/Senha no Firebase | Idem | Login |
+| Criar Firestore (modo teste) | Idem | Treinos e perfil |
+| Testar API Wger no browser | Antes da Fase 6 | Confirmar PT-BR e endpoints |
+| Branch Git (`refactor/navigation`) | Antes da Fase 0 | Isolar mudanças grandes |
+| Rodar `npx expo start` | Agora | Confirmar baseline funcional |
+
+Teste rápido Wger:
+```
+https://wger.de/api/v2/exercise/?language=2&limit=5
+```
+
+---
+
+## Preparação opcional no repositório
+
+Coisas úteis que ainda dá para fazer **antes** da Fase 0, sem instalar dependências:
+
+| Ação | Esforço | Benefício | Status |
+|---|---|---|---|
+| Documentar deltas dos mockups em `designs/stitch/README.md` | ~10 min | IA e você codam fiel ao Stitch | **FEITO** |
+| Corrigir paths `./Icons` → `../../Icons` nos 6 `Treino*.js` | ~5 min | Modais funcionam | **FEITO** |
+| Resolver `SwimmingIcon` / `VolleyballIcon` | ~15 min | Dashboard não quebra | **FEITO** |
+| Criar `babel.config.js` com preset Expo (sem Reanimated ainda) | ~2 min | Pronto para Fase 0.1 | **FEITO** |
+| Criar pastas vazias `src/hooks`, `navigation`, `components`, `data`, `utils` | ~2 min | Estrutura alinhada ao plano | **FEITO** |
+| Atualizar `README.md` (estrutura desatualizada) | ~10 min | Menos confusão | **FEITO** |
+| Tag/commit de backup antes do refactor | 1 min | Rollback fácil | Requer você |
+
+**Não recomendo ainda:** instalar React Navigation/Firebase, refatorar `App.js` ou implementar telas — isso é Fase 0+.
+
+---
+
+## Ordem sugerida antes de “Implementar Fase 0”
+
+```
+1. npx expo start          → confirmar que o app abre hoje
+2. Corrigir ícones         → paths Treino*.js + SVGs faltantes
+3. Criar babel.config.js   → preset Expo
+4. Branch git              → refactor/navigation
+5. (Opcional) Notas mockups no README de designs
+6. Iniciar Fase 0.1        → expo install navigation + reanimated
+```
+
+---
+
+## Conclusão
+
+**Pode começar a Fase 0** — mockups e docs estão prontos.
+
+Antes de codar navegação, vale **~30 min de preparação** nos bugs de ícones, `babel.config.js` e notas dos mockups (login/registro em duas telas). Firebase e Wger podem ficar para as fases 5 e 6.
+
+Quer que eu execute agora a preparação técnica (corrigir imports, `babel.config.js`, pastas e notas nos mockups)? Posso fazer isso sem iniciar a Fase 0 completa.
+
 ---
 
 ## Visão geral da arquitetura final

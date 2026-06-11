@@ -30,28 +30,17 @@ Abaixo, apresentamos a árvore de diretórios principal do projeto. Diretórios 
 ```text
 FitnessApp/
 ├── assets/                  # Imagens estáticas e recursos visuais padrão do Expo
-├── Icons/                   # Componentes SVG customizados utilizados na interface
-│   ├── AddIcon.svg
-│   ├── ArrowIcon.svg
-│   ├── CiclismIcon.svg
-│   ├── CustumizeIcon.svg
-│   ├── DumbellIcon.svg
-│   ├── DumbellIconNav.svg
-│   ├── LightningIcon.svg
-│   ├── ProfileIcon.svg
-│   ├── RunningIcon.svg
-│   ├── SoccerIcon.svg
-│   ├── SwimmingIcon.svg
-│   └── VolleyballIcon.svg
-├── App.js                   # Ponto de entrada e tela principal de navegação do App
-├── CriarTreino.js           # Formulário Modal para criação de treinos customizados
-├── TreinoMusculacao.js      # Tela específica de modalidade esportiva
-├── TreinoCiclismo.js        # Tela específica de modalidade esportiva
-├── TreinoCorrida.js         # Tela específica de modalidade esportiva
-├── TreinoFutebol.js         # Tela específica de modalidade esportiva
-├── TreinoVolei.js           # Tela específica de modalidade esportiva
-├── TreinoNatacao.js         # Tela específica de modalidade esportiva
+├── src/                     # Código fonte da aplicação
+│   ├── components/          # Componentes customizados e reutilizáveis
+│   ├── data/                # Informações estáticas (treinos e estatísticas)
+│   ├── hooks/               # Custom hooks React
+│   ├── Icons/               # Ícones em formato SVG transformados em componentes
+│   ├── navigation/          # Arquivos de Stack, Drawer e navegação principal
+│   ├── screens/             # Telas completas da aplicação
+│   └── utils/               # Funções de ajuda e comunicação com API
+├── App.js                   # Componente raiz
 ├── app.json                 # Configurações do ambiente Expo
+├── babel.config.js          # Configuração do compilador Babel e presets
 ├── index.js                 # Ponto base de inicialização do React Native
 ├── metro.config.js          # Configuração do Bundler (ex: Suporte local a SVG)
 ├── package.json             # Dependências e scripts de inicialização
