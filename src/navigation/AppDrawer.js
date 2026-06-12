@@ -40,6 +40,11 @@ export default function AppDrawer() {
           fontFamily: 'Lexend_700Bold',
           fontSize: 14,
         },
+        drawerItemStyle: {
+          borderRadius: 12, // Altere este valor (ex: 8 para quadrado, 100 para totalmente arredondado)
+          paddingHorizontal: 8,
+          marginVertical: 4,
+        },
       }}
     >
       <Drawer.Screen

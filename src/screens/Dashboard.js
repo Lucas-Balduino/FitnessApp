@@ -45,7 +45,7 @@ export default function Dashboard() {
 
               <View style={styles.cardContent}>
                 <View style={[styles.floatingIcon, { backgroundColor: treino.mainColor }]}>
-                  <IconeDoCard width={24} height={24} fill="#FFFFFF" />
+                  <IconeDoCard width={24} height={24} fill="#FFFFFF" color="#FFFFFF" />
                 </View>
 
                 <Text style={styles.cardTitle}>{treino.titulo}</Text>
