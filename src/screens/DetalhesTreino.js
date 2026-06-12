@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { exerciciosPorEsporte } from '../data/exerciciosPorEsporte';
+import { useScreenAnimation } from '../hooks/useScreenAnimation';
 
 // Ícones
 import ArrowIcon from '../Icons/ArrowIcon.svg';
@@ -24,27 +25,10 @@ export default function DetalhesTreino({ route }) {
   const { esporte } = route.params;
   const dados = exerciciosPorEsporte[esporte];
 
-  const fechar = () => navigation.goBack();
+  const { slideAnim, animateOut } = useScreenAnimation();
 
-  // ── Animação: slide da direita para esquerda
-  const slideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current;
-
-  // Entra da direita ao montar
-  useEffect(() => {
-    Animated.timing(slideAnim, {
-      toValue: 0,
-      duration: 320,
-      useNativeDriver: false,
-    }).start();
-  }, [slideAnim]);
-
-  // Sai para a direita ao fechar, depois chama fechar()
   const handleFechar = () => {
-    Animated.timing(slideAnim, {
-      toValue: SCREEN_WIDTH,
-      duration: 260,
-      useNativeDriver: false,
-    }).start(() => fechar());
+    animateOut(() => navigation.goBack());
   };
 
   if (!dados) {

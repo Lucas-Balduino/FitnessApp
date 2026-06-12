@@ -6,10 +6,12 @@ import {
   TouchableOpacity, 
   ScrollView,
   TextInput,
-  Modal
+  Modal,
+  Animated
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { useScreenAnimation } from '../hooks/useScreenAnimation';
 
 // ==========================================
 // COMPONENTES CUSTOMIZADOS (DESIGN SYSTEM)
@@ -73,7 +75,11 @@ const CustomSlider = ({ value, min, max, onValueChange, activeColor }) => {
 
 export default function CriarTreino() {
   const navigation = useNavigation();
-  const fechar = () => navigation.goBack();
+  const { slideAnim, animateOut } = useScreenAnimation();
+  
+  const fechar = () => {
+    animateOut(() => navigation.goBack());
+  };
   // --- ESTADOS DO FORMULÁRIO ---
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
@@ -114,7 +120,8 @@ export default function CriarTreino() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <Animated.View style={{ flex: 1, transform: [{ translateX: slideAnim }] }}>
+      <SafeAreaView style={styles.container} edges={['top']}>
       
       {/* CABEÇALHO */}
       <View style={styles.header}>
@@ -297,7 +304,8 @@ export default function CriarTreino() {
         </View>
       </Modal>
 
-    </SafeAreaView>
+      </SafeAreaView>
+    </Animated.View>
   );
 }
 
