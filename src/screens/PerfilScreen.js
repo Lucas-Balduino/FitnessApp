@@ -123,7 +123,7 @@ export default function PerfilScreen() {
         </View>
       </ScrollView>
 
-      {/* BOTÃO SALVAR (Fixo embaixo) */}
+      {/* BOTÕES (Fixo embaixo) */}
       <View style={styles.footer}>
         <TouchableOpacity 
           style={[styles.mainButton, salvando && styles.mainButtonDisabled]} 
@@ -135,6 +135,17 @@ export default function PerfilScreen() {
           ) : (
             <Text style={styles.mainButtonText}>SALVAR ALTERAÇÕES</Text>
           )}
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={styles.logoutButton}
+          onPress={async () => {
+            const { getAuth, signOut } = await import('firebase/auth');
+            const auth = getAuth();
+            signOut(auth).catch(e => alert(e.message));
+          }}
+        >
+          <Text style={styles.logoutText}>Sair da conta</Text>
         </TouchableOpacity>
       </View>
 
@@ -340,5 +351,15 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#FFFFFF',
     letterSpacing: 1,
+  },
+  logoutButton: {
+    marginTop: 15,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  logoutText: {
+    fontFamily: 'Lexend_700Bold',
+    fontSize: 14,
+    color: '#EF4444', // Vermelho (tailwind red-500)
   },
 });

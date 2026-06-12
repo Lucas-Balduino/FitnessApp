@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar, ActivityIndicator, View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -15,8 +15,20 @@ import {
 import AppDrawer from './src/navigation/AppDrawer';
 import AuthStack from './src/navigation/AuthStack';
 
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebaseConfig';
+
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsLoggedIn(!!user);
+      setAuthLoading(false);
+    });
+    return unsubscribe;
+  }, []);
 
   let [fontsLoaded] = useFonts({
     Lexend_400Regular,
@@ -25,7 +37,7 @@ export default function App() {
     Lexend_900Black,
   });
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || authLoading) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
         <ActivityIndicator size="large" color="#005CEE" />

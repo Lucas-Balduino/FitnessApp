@@ -9,11 +9,15 @@ import {
   Platform,
   ScrollView,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import EyeIcon from '../Icons/EyeIcon.svg';
 import EyeOffIcon from '../Icons/EyeOffIcon.svg';
+
+import { auth } from '../../firebaseConfig';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 
 export default function LoginScreen() {
   const [modoRegistro, setModoRegistro] = useState(false);
@@ -22,16 +26,40 @@ export default function LoginScreen() {
   const [senha, setSenha] = useState('');
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [carregando, setCarregando] = useState(false);
+  const [erro, setErro] = useState('');
 
-  const handleSubmit = () => {
-    // Simulação temporária de envio (Firebase será implementado na Fase 5)
+  const handleSubmit = async () => {
+    setErro('');
+
+    if (!email || !senha) {
+      setErro('Preencha email e senha para continuar.');
+      return;
+    }
+
     setCarregando(true);
-    setTimeout(() => {
+    try {
+      if (modoRegistro) {
+        if (!nome) {
+          setErro('Por favor, informe seu nome.');
+          setCarregando(false);
+          return;
+        }
+        await createUserWithEmailAndPassword(auth, email, senha);
+      } else {
+        await signInWithEmailAndPassword(auth, email, senha);
+      }
+      // Não precisamos navegar manualmente. O onAuthStateChanged do App.js vai detectar o login e redirecionar!
+    } catch (error) {
+      console.error(error);
+      let mensagem = 'Ocorreu um erro ao tentar autenticar.';
+      if (error.code === 'auth/invalid-email') mensagem = 'E-mail inválido.';
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') mensagem = 'Usuário não encontrado ou senha incorreta.';
+      if (error.code === 'auth/email-already-in-use') mensagem = 'Este e-mail já está em uso.';
+      if (error.code === 'auth/weak-password') mensagem = 'A senha deve ter pelo menos 6 caracteres.';
+      setErro(mensagem);
+    } finally {
       setCarregando(false);
-      // Aqui teremos a lógica real de autenticação e navegação para o Drawer
-      // Por enquanto não fazemos nada ou apenas chamamos um mock
-      alert(modoRegistro ? 'Conta criada com sucesso! (Mock)' : 'Login efetuado com sucesso! (Mock)');
-    }, 1500);
+    }
   };
 
   const toggleModo = () => {
@@ -124,6 +152,11 @@ export default function LoginScreen() {
 
         {/* RODAPÉ E BOTÃO (Fixo embaixo) */}
         <View style={styles.footer}>
+          {erro !== '' && (
+            <View style={styles.erroContainer}>
+              <Text style={styles.erroText}>{erro}</Text>
+            </View>
+          )}
           <TouchableOpacity 
             style={[styles.mainButton, carregando && styles.mainButtonDisabled]} 
             onPress={handleSubmit}
@@ -302,5 +335,19 @@ const styles = StyleSheet.create({
     color: '#9CA3AF',
     textAlign: 'center',
     lineHeight: 16,
+  },
+  erroContainer: {
+    backgroundColor: '#FEF2F2',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#FECACA',
+  },
+  erroText: {
+    fontFamily: 'Lexend_700Bold',
+    fontSize: 13,
+    color: '#DC2626',
+    textAlign: 'center',
   },
 });

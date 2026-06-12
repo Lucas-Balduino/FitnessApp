@@ -1,2 +1,25 @@
-// Empty config ready for phase 5
-// export const firebaseConfig = { ... }
+import { initializeApp } from 'firebase/app';
+import { initializeAuth, getReactNativePersistence, getAuth } from 'firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA9QKJvIdbFqSUovlfqKinVSC3OzRWXLnY",
+  authDomain: "fitnessappdevmobile.firebaseapp.com",
+  projectId: "fitnessappdevmobile",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+// Initialize Firebase Auth with React Native Persistence
+let auth;
+try {
+  auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage)
+  });
+} catch (e) {
+  // Se o auth já foi inicializado (ex: hot reload), pega a instância existente
+  auth = getAuth(app);
+}
+
+export { app, auth };
