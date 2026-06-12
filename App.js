@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView, StatusBar, ActivityIndicator, View, StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import {
   useFonts,
   Lexend_400Regular,
@@ -8,9 +9,13 @@ import {
   Lexend_900Black
 } from '@expo-google-fonts/lexend';
 
-import Dashboard from './src/screens/Dashboard';
+import AppDrawer from './src/navigation/AppDrawer';
+import AuthStack from './src/navigation/AuthStack';
 
 export default function App() {
+  // Flag temporária para forçar usuário "logado" e testarmos o Drawer
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
   let [fontsLoaded] = useFonts({
     Lexend_400Regular,
     Lexend_700Bold,
@@ -29,7 +34,9 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#F8F9FE" />
-      <Dashboard />
+      <NavigationContainer>
+        {isLoggedIn ? <AppDrawer /> : <AuthStack />}
+      </NavigationContainer>
     </SafeAreaView>
   );
 }

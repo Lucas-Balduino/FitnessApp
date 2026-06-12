@@ -86,7 +86,9 @@ const exercicios = [
 // TELA PRINCIPAL
 // ==========================================
 
-export default function TreinoNatacao({ fechar }) {
+export default function TreinoNatacao() {
+  const navigation = useNavigation();
+  const fechar = () => navigation.goBack();
   // ── Animação: slide da direita para esquerda
   const slideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current;
 

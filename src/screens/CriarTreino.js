@@ -70,7 +70,9 @@ const CustomSlider = ({ value, min, max, onValueChange, activeColor }) => {
 // TELA PRINCIPAL
 // ==========================================
 
-export default function CriarTreino({ fechar }) {
+export default function CriarTreino() {
+  const navigation = useNavigation();
+  const fechar = () => navigation.goBack();
   // --- ESTADOS DO FORMULÁRIO ---
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');

@@ -1,44 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   StyleSheet,
   Text,
   View,
   ScrollView,
   Image,
-  TouchableOpacity,
-  Modal
+  TouchableOpacity
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import { treinos } from '../data/treinos';
 import { estatisticas } from '../data/estatisticas';
 
-// Import dos Modais
-import CriarTreino from './CriarTreino';
-import TreinoMusculacao from './TreinoMusculacao';
-import TreinoCiclismo from './TreinoCiclismo';
-import TreinoCorrida from './TreinoCorrida';
-import TreinoFutebol from './TreinoFutebol';
-import TreinoVolei from './TreinoVolei';
-import TreinoNatacao from './TreinoNatacao';
-
-// Ícones SVG da navegação
-import AddIcon from '../Icons/AddIcon.svg';
-import DumbellIconNav from '../Icons/DumbellIconNav.svg';
-import ProfileIcon from '../Icons/ProfileIcon.svg';
-
 export default function Dashboard() {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalMusculacao, setModalMusculacao] = useState(false);
-  const [modalCiclismo, setModalCiclismo] = useState(false);
-  const [modalCorrida, setModalCorrida] = useState(false);
-  const [modalFutebol, setModalFutebol] = useState(false);
-  const [modalVolei, setModalVolei] = useState(false);
-  const [modalNatacao, setModalNatacao] = useState(false);
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <Text style={styles.menuIcon}>☰</Text>
         </TouchableOpacity>
         <Text style={styles.logoKinetic}>KINETIC</Text>
@@ -83,13 +63,11 @@ export default function Dashboard() {
                 <TouchableOpacity
                   style={[styles.button, { backgroundColor: treino.mainColor }]}
                   onPress={() => {
-                    if (treino.id === '1') setModalMusculacao(true);
-                    else if (treino.id === '2') setModalCiclismo(true);
-                    else if (treino.id === '3') setModalCorrida(true);
-                    else if (treino.id === '4') setModalFutebol(true);
-                    else if (treino.id === '5') setModalVolei(true);
-                    else if (treino.id === '6') setModalNatacao(true);
-                    else if (treino.id === '7') setModalVisible(true);
+                    if (treino.id === '7') {
+                      navigation.navigate('CriarTreino');
+                    } else {
+                      navigation.navigate('DetalhesTreino', { esporte: treino.id });
+                    }
                   }}
                 >
                   <Text style={styles.buttonText}>{treino.textoBotao}</Text>
@@ -117,53 +95,6 @@ export default function Dashboard() {
         </View>
 
       </ScrollView>
-
-      {/* BOTTOM NAVIGATION COM SVGs */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-          <DumbellIconNav width={24} height={24} color="#005CEE" style={styles.navIconSpacing} />
-          <Text style={[styles.navLabel, { color: '#005CEE' }]}>TRAIN</Text>
-        </TouchableOpacity>
-
-        <View style={styles.fabContainer}>
-          <TouchableOpacity style={styles.fab} onPress={() => setModalVisible(true)}>
-            <AddIcon width={20} height={20} fill="#FFFFFF" />
-          </TouchableOpacity>
-        </View>
-
-        <TouchableOpacity style={styles.navItem}>
-          <ProfileIcon width={24} height={24} fill="#9CA3AF" style={styles.navIconSpacing} />
-          <Text style={styles.navLabel}>PROFILE</Text>
-        </TouchableOpacity>
-
-        <Modal transparent={false} animationType="slide" visible={modalVisible}>
-          <CriarTreino fechar={() => setModalVisible(false)} />
-        </Modal>
-
-        <Modal transparent={false} animationType="none" visible={modalMusculacao}>
-          <TreinoMusculacao fechar={() => setModalMusculacao(false)} />
-        </Modal>
-
-        <Modal transparent={false} animationType="none" visible={modalCiclismo}>
-          <TreinoCiclismo fechar={() => setModalCiclismo(false)} />
-        </Modal>
-
-        <Modal transparent={false} animationType="none" visible={modalCorrida}>
-          <TreinoCorrida fechar={() => setModalCorrida(false)} />
-        </Modal>
-
-        <Modal transparent={false} animationType="none" visible={modalFutebol}>
-          <TreinoFutebol fechar={() => setModalFutebol(false)} />
-        </Modal>
-
-        <Modal transparent={false} animationType="none" visible={modalVolei}>
-          <TreinoVolei fechar={() => setModalVolei(false)} />
-        </Modal>
-
-        <Modal transparent={false} animationType="none" visible={modalNatacao}>
-          <TreinoNatacao fechar={() => setModalNatacao(false)} />
-        </Modal>
-      </View>
     </View>
   );
 }
@@ -174,7 +105,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F9FE',
   },
   scrollContent: {
-    paddingBottom: 100,
+    paddingBottom: 30,
   },
   header: {
     flexDirection: 'row',
@@ -347,55 +278,5 @@ const styles = StyleSheet.create({
   statSub: {
     fontFamily: 'Lexend_800ExtraBold',
     fontSize: 10,
-  },
-  bottomNav: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 80,
-    backgroundColor: '#FFFFFF',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -5 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 10,
-  },
-  navItem: {
-    width: 100,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  navIconSpacing: {
-    marginBottom: 4,
-  },
-  navLabel: {
-    fontFamily: 'Lexend_700Bold',
-    fontSize: 10,
-    color: '#9CA3AF',
-  },
-  fabContainer: {
-    width: 100,
-    position: 'relative',
-    top: -25,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  fab: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#005CEE',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#005CEE',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
-    elevation: 6,
   }
 });

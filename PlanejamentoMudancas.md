@@ -232,74 +232,71 @@ src/
 **Objetivo:** substituir modais e bottom nav por React Navigation.
 **Requisitos atendidos:** React Navigation, Stack, Drawer, ≥3 telas principais, Drawer com ícones.
 
-### Etapa 1.1 — Criar Home Stack
+### Etapa 1.1 — Criar Stack Principal (`HomeStack`)
 
-- [ ] Criar `src/navigation/HomeStack.js` com `@react-navigation/stack`
-- [ ] Registrar rotas:
-  - `Dashboard` → `src/screens/Dashboard.js`
-  - `CriarTreino` → `src/screens/CriarTreino.js`
-  - `DetalhesTreino` → placeholder inicial (pode apontar para `TreinoMusculacao` até Fase 2)
-- [ ] Configurar **todas** as telas do Stack com:
-  ```js
-  options={{ headerShown: false, animationEnabled: false }}
-  ```
-  > Isso desativa a transição nativa do Stack e preserva espaço para `useScreenAnimation`.
+- [x] Criar arquivo `src/navigation/HomeStack.js` com `@react-navigation/stack`
+- [x] Desabilitar header e animação nativa: `options={{ headerShown: false, animationEnabled: false }}` (animações serão feitas pelo nosso hook).
+- [x] Registrar telas:
+  - `Dashboard`
+  - `CriarTreino`
+  - `DetalhesTreino` (aponta para `TreinoMusculacao` temporariamente até a Fase 2)
 
 ### Etapa 1.2 — Criar App Drawer
 
-- [ ] Criar `src/navigation/AppDrawer.js` com `@react-navigation/drawer`
-- [ ] Registrar rotas do Drawer (mínimo 3):
+- [x] Criar `src/navigation/AppDrawer.js` com `@react-navigation/drawer`
+- [x] Registrar rotas do Drawer (mínimo 3):
   | Rota interna | Label no menu | Ícone |
   |---|---|---|
   | `Inicio` | Início | ícone casa (criar ou reutilizar) |
   | `Biblioteca` | Biblioteca | `DumbellIcon` |
   | `Perfil` | Perfil | `ProfileIcon` |
-- [ ] Item **Sair** não é rota — é botão no Custom Drawer Content (Fase 1.4)
+- [x] Item **Sair** não é rota — é botão no Custom Drawer Content (Fase 1.4)
 
-### Etapa 1.3 — Criar Auth Stack (estrutura vazia por enquanto)
+### Etapa 1.3 — Criar Auth Stack
 
-- [ ] Criar `src/navigation/AuthStack.js` com rota `Login` apontando para placeholder
-- [ ] Em `App.js`, renderizar `AuthStack` fixo (auth real vem na Fase 5)
-- [ ] Alternar manualmente entre Auth e App Drawer para testar (flag temporária `const isLoggedIn = true`)
+- [x] Criar `src/navigation/AuthStack.js`
+- [x] Implementar uma tela "Placeholder" de Login bem simples (texto centralizado "Login Temporário") só para testar o roteamento. A tela real será feita na Fase 4.
+- [x] No `App.js`, renderizar: `isLoggedIn ? <AppDrawer /> : <AuthStack />` (criar flag `isLoggedIn` fixada em `true` por enquanto).
 
-### Etapa 1.4 — Custom Drawer Content
+### Etapa 1.4 — Customizar o Drawer Content
 
-- [ ] Criar `src/components/CustomDrawerContent.js`
-- [ ] Cabeçalho: saudação "Olá, Atleta!" (nome dinâmico na Fase 5)
-- [ ] Cada item: ícone SVG + label com fonte Lexend
-- [ ] Item ativo: fundo `#005CEE`, texto branco; inativos: cinza `#9CA3AF`
-- [ ] Botão **Sair**: chama `signOut` do Firebase (implementar na Fase 5; por ora, `console.log`)
-- [ ] Passar `drawerContent` prop no `Drawer.Navigator`
+- [x] Criar `src/components/CustomDrawerContent.js` estendendo `DrawerContentScrollView`
+- [x] Criar um **Header** para o Drawer:
+  - Avatar circular (pode reutilizar SVG ou placeholder).
+  - Texto "Olá, Atleta!"
+- [x] Renderizar `DrawerItemList` logo abaixo do header.
+- [x] Criar um **Footer** para o Drawer:
+  - Botão de logout ("Sair") com cor destacada/vermelha.
+  - Texto de versão (ex: v1.0.0).
 
-### Etapa 1.5 — Migrar modais para rotas
+### Etapa 1.5 — Limpar Dashboard.js
 
-- [ ] Remover do `App.js` / `Dashboard.js`:
-  - Estados: `modalVisible`, `modalMusculacao`, `modalCiclismo`, etc.
-  - Todos os componentes `<Modal>`
-- [ ] No Dashboard, substituir `setModalX(true)` por `navigation.navigate('DetalhesTreino', { esporte: '...' })` (params completos na Fase 2)
-- [ ] Card "CUSTOMIZADO" → `navigation.navigate('CriarTreino')`
-- [ ] FAB (+) → `navigation.navigate('CriarTreino')`
+- [x] Remover todos os imports e renderizações de `<Modal>` (TreinoMusculacao, TreinoCiclismo, etc).
+- [x] Remover a `bottomNav` inteira (o Drawer agora é o principal e não temos mais abas inferiores). Remover os estilos correspondentes.
+- [x] No Dashboard, substituir `setModalX(true)` por `navigation.navigate('DetalhesTreino', { esporte: '...' })` (params completos na Fase 2).
+  - Card CUSTOMIZADO -> `navigation.navigate('CriarTreino')`
+- [x] O botão hamburguer (`☰`) no Header deve chamar `navigation.openDrawer()`.
 
 ### Etapa 1.6 — Conectar botão hamburger
 
-- [ ] No header do Dashboard, vincular `☰` a `navigation.openDrawer()`
-- [ ] Gesto de arrastar da esquerda já funciona nativamente no Drawer
+- [x] No header do Dashboard, vincular `☰` a `navigation.openDrawer()`
+- [x] Gesto de arrastar da esquerda já funciona nativamente no Drawer
 
 ### Etapa 1.7 — Remover bottom nav manual
 
-- [ ] Remover `styles.bottomNav` e todo o JSX da barra inferior do Dashboard
-- [ ] Remover bottom nav duplicada das telas `Treino*.js` (se existir)
-- [ ] Ajustar `paddingBottom` do `ScrollView` (de 100 para ~30)
+- [x] Remover `styles.bottomNav` e todo o JSX da barra inferior do Dashboard
+- [x] Remover bottom nav duplicada das telas `Treino*.js` (se existir)
+- [x] Ajustar `paddingBottom` do `ScrollView` (de 100 para ~30)
 
 ### Etapa 1.8 — Adaptar prop `fechar` para navegação
 
-- [ ] Nas telas de treino e `CriarTreino`, trocar prop `fechar` por hook de navegação:
+- [x] Nas telas de treino e `CriarTreino`, trocar prop `fechar` por hook de navegação:
   ```js
   import { useNavigation } from '@react-navigation/native';
   const navigation = useNavigation();
   const fechar = () => navigation.goBack();
   ```
-- [ ] Manter assinatura interna `fechar` para compatibilidade com `useScreenAnimation` (Fase 3)
+- [x] Manter assinatura interna `fechar` para compatibilidade com `useScreenAnimation` (Fase 3)
 
 **Critério de conclusão:** navegar entre Dashboard → treino → voltar, e Dashboard → CriarTreino → voltar, tudo sem modais. Drawer abre por gesto e por botão.
 

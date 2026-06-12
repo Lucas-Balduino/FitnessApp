@@ -86,7 +86,9 @@ const exercicios = [
 // TELA PRINCIPAL
 // ==========================================
 
-export default function TreinoVolei({ fechar }) {
+export default function TreinoVolei() {
+  const navigation = useNavigation();
+  const fechar = () => navigation.goBack();
   // ── Animação: slide da direita para esquerda
   const slideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current;
 
