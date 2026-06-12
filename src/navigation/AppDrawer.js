@@ -35,7 +35,6 @@ export default function AppDrawer() {
         drawerLabelStyle: {
           fontFamily: 'Lexend_700Bold',
           fontSize: 14,
-          marginLeft: -10, // Aproxima o texto do ícone
         },
       }}
     >

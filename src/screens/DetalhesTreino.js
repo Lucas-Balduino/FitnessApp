@@ -10,85 +10,22 @@ import {
   Animated,
   Dimensions,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { exerciciosPorEsporte } from '../data/exerciciosPorEsporte';
 
 // Ícones
 import ArrowIcon from '../Icons/ArrowIcon.svg';
 import LightningIcon from '../Icons/LightningIcon.svg';
-import AddIcon from '../Icons/AddIcon.svg';
-import DumbellIconNav from '../Icons/DumbellIconNav.svg';
-import ProfileIcon from '../Icons/ProfileIcon.svg';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-// ==========================================
-// DADOS DO TREINO
-// ==========================================
-
-const aquecimento = [
-  { numero: '01', numeroColor: '#82E53A', nome: 'Bobinho', detalhe: '10 Minutes' },
-  { numero: '02', numeroColor: '#F26522', nome: 'Piques curtos', detalhe: '5 Minutes' },
-];
-
-const exercicios = [
-  {
-    id: '1',
-    nome: 'DRIBLE ENTRE CONES',
-    tag1: 'CAMPO',
-    tag2: 'AGILIDADE',
-    series: 4,
-    reps: '2m',
-    descanso: '60s',
-    imagem: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=800&auto=format&fit=crop',
-  },
-  {
-    id: '2',
-    nome: 'FINALIZAÇÃO',
-    tag1: 'GOL',
-    tag2: 'PRECISÃO',
-    series: 5,
-    reps: '10',
-    descanso: '90s',
-    imagem: 'https://images.unsplash.com/photo-1552318965-6e6be7484ada?q=80&w=800&auto=format&fit=crop',
-  },
-  {
-    id: '3',
-    nome: 'COLETIVO TÁTICO',
-    tag1: 'JOGO',
-    tag2: 'ESTRATÉGIA',
-    series: 2,
-    reps: '20m',
-    descanso: '5m',
-    imagem: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=800&auto=format&fit=crop',
-  },
-  {
-    id: '4',
-    nome: 'PASSE LONGO',
-    tag1: 'CAMPO',
-    tag2: 'VISÃO',
-    series: 4,
-    reps: '15',
-    descanso: '60s',
-    imagem: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=800&auto=format&fit=crop',
-  },
-  {
-    id: '5',
-    nome: 'CRUZAMENTO E CABECEIO',
-    tag1: 'ÁREA',
-    tag2: 'AÉREO',
-    series: 5,
-    reps: '12',
-    descanso: '60s',
-    imagem: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=800&auto=format&fit=crop',
-  }
-];
-
-// ==========================================
-// TELA PRINCIPAL
-// ==========================================
-
-export default function TreinoFutebol() {
+export default function DetalhesTreino({ route }) {
   const navigation = useNavigation();
+  const { esporte } = route.params;
+  const dados = exerciciosPorEsporte[esporte];
+
   const fechar = () => navigation.goBack();
+
   // ── Animação: slide da direita para esquerda
   const slideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current;
 
@@ -99,7 +36,7 @@ export default function TreinoFutebol() {
       duration: 320,
       useNativeDriver: true,
     }).start();
-  }, []);
+  }, [slideAnim]);
 
   // Sai para a direita ao fechar, depois chama fechar()
   const handleFechar = () => {
@@ -110,57 +47,64 @@ export default function TreinoFutebol() {
     }).start(() => fechar());
   };
 
+  if (!dados) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={{ textAlign: 'center', marginTop: 50, fontFamily: 'Lexend_700Bold' }}>
+          Treino não encontrado!
+        </Text>
+      </SafeAreaView>
+    );
+  }
+
+  const { titulo, cor, aquecimento, exercicios } = dados;
+
   return (
     <Animated.View style={{ flex: 1, transform: [{ translateX: slideAnim }] }}>
       <SafeAreaView style={styles.container}>
-
         {/* ── CABEÇALHO ── */}
         <View style={styles.header}>
           <TouchableOpacity onPress={handleFechar} style={styles.backButton}>
             <ArrowIcon width={22} height={22} fill="#1A1C29" />
           </TouchableOpacity>
-          <Text style={styles.logoTitle}>KINETIC</Text>
+          <Text style={[styles.logoTitle, { color: cor }]}>KINETIC</Text>
           <View style={{ width: 32 }} />
         </View>
 
         {/* ── CONTEÚDO ── */}
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           {/* TÍTULO */}
           <View style={styles.titleContainer}>
-            <Text style={styles.mainTitle}>FUTEBOL</Text>
+            <Text style={styles.mainTitle}>{titulo}</Text>
             <Text style={styles.subtitle}>
-              O futebol é um esporte coletivo dinâmico que trabalha intensamente a resistência aeróbica, a coordenação motora e a agilidade. Sua prática regular fortalece o sistema muscular e cardiovascular, além de incentivar fortemente o trabalho em equipe e o raciocínio rápido em campo.
+              Treino focado em desenvolvimento de performance e resultados específicos desta modalidade.
             </Text>
           </View>
 
-          {/* ── ESTATÍSTICAS: 2 cards individuais ── */}
+          {/* ── ESTATÍSTICAS ── */}
           <View style={styles.statsRow}>
             <View style={styles.statCard}>
               <Text style={styles.statLabel}>DURAÇÃO</Text>
-              <Text style={styles.statValue}>90<Text style={styles.statUnit}>min</Text></Text>
+              <Text style={styles.statValue}>60<Text style={styles.statUnit}>min</Text></Text>
             </View>
             <View style={styles.statCard}>
               <Text style={styles.statLabel}>CALORIAS</Text>
-              <Text style={styles.statValue}>700<Text style={styles.statUnit}>kcal</Text></Text>
+              <Text style={styles.statValue}>450<Text style={styles.statUnit}>kcal</Text></Text>
             </View>
           </View>
 
           {/* ── DICA DE TREINADOR ── */}
-          <View style={styles.tipCard}>
+          <View style={[styles.tipCard, { backgroundColor: cor }]}>
             <View style={styles.tipHeader}>
               <LightningIcon width={16} height={16} fill="#FFFFFF" />
               <Text style={styles.tipTitle}>DICA DE TREINADOR</Text>
             </View>
             <Text style={styles.tipText}>
-              Sempre olhe para a bola ao dominar, mas mantenha a visão de jogo periférica.
+              Se concentre na fase de execução dos movimentos para evitar lesões e maximizar ganhos.
             </Text>
           </View>
 
-          {/* ── AQUECIMENTO: card único contendo os itens ── */}
+          {/* ── AQUECIMENTO ── */}
           <Text style={styles.sectionTitle}>AQUECIMENTO</Text>
           <View style={styles.warmupCard}>
             {aquecimento.map((item, index) => (
@@ -183,27 +127,22 @@ export default function TreinoFutebol() {
           </View>
 
           {/* ── CARDS DE EXERCÍCIO ── */}
+          <Text style={[styles.sectionTitle, { marginTop: 10 }]}>SÉRIE PRINCIPAL</Text>
           {exercicios.map((ex) => (
             <View key={ex.id} style={styles.exerciseCard}>
-
-              <Image
-                source={{ uri: ex.imagem }}
-                style={styles.exerciseImage}
-                resizeMode="cover"
-              />
+              <Image source={{ uri: ex.imagem }} style={styles.exerciseImage} resizeMode="cover" />
 
               <Text style={styles.exerciseName}>{ex.nome}</Text>
               <View style={styles.exerciseTags}>
-                <Text style={styles.tagBlue}>{ex.tag1}</Text>
-                <Text style={styles.tagDot}> • </Text>
-                <Text style={styles.tagBlue}>{ex.tag2}</Text>
+                <Text style={[styles.tagColor, { color: cor }]}>{ex.tag1}</Text>
+                <Text style={[styles.tagDot, { color: cor }]}> • </Text>
+                <Text style={[styles.tagColor, { color: cor }]}>{ex.tag2}</Text>
               </View>
 
-              {/* Stats: 3 cards individuais */}
+              {/* Stats */}
               <View style={styles.exerciseStatsRow}>
-
                 <View style={styles.exerciseStatCard}>
-                  <View style={styles.exerciseStatAccent} />
+                  <View style={[styles.exerciseStatAccent, { backgroundColor: cor }]} />
                   <View style={styles.exerciseStatContent}>
                     <Text style={styles.exerciseStatLabel}>SETS</Text>
                     <Text style={styles.exerciseStatValue}>{ex.series}</Text>
@@ -223,50 +162,22 @@ export default function TreinoFutebol() {
                     <Text style={styles.exerciseStatValue}>{ex.descanso}</Text>
                   </View>
                 </View>
-
               </View>
             </View>
           ))}
 
           {/* ── BOTÃO COMEÇAR TREINO ── */}
-          <TouchableOpacity style={styles.startButton} activeOpacity={0.85}>
+          <TouchableOpacity style={[styles.startButton, { backgroundColor: cor, shadowColor: cor }]} activeOpacity={0.85}>
             <Text style={styles.startButtonText}>▶  COMEÇAR TREINO</Text>
           </TouchableOpacity>
-
         </ScrollView>
-
-        {/* ── BOTTOM NAVIGATION ── */}
-        <View style={styles.bottomNav}>
-          <TouchableOpacity style={styles.navItem}>
-            <DumbellIconNav width={24} height={24} color="#005CEE" style={styles.navIconSpacing} />
-            <Text style={[styles.navLabel, { color: '#005CEE' }]}>TRAIN</Text>
-          </TouchableOpacity>
-
-          <View style={styles.fabContainer}>
-            <TouchableOpacity style={styles.fab}>
-              <AddIcon width={20} height={20} fill="#FFFFFF" />
-            </TouchableOpacity>
-          </View>
-
-          <TouchableOpacity style={styles.navItem}>
-            <ProfileIcon width={24} height={24} fill="#9CA3AF" style={styles.navIconSpacing} />
-            <Text style={styles.navLabel}>PROFILE</Text>
-          </TouchableOpacity>
-        </View>
-
       </SafeAreaView>
     </Animated.View>
   );
 }
 
-// ==========================================
-// ESTILOS
-// ==========================================
 const styles = StyleSheet.create({
-
   container: { flex: 1, backgroundColor: '#F8F9FE' },
-
-  // ── Header
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -278,14 +189,9 @@ const styles = StyleSheet.create({
   logoTitle: {
     fontFamily: 'Lexend_900Black',
     fontSize: 20,
-    color: '#005CEE',
     letterSpacing: 1,
   },
-
-  // ── Scroll
-  scrollContent: { paddingHorizontal: 20, paddingBottom: 110 },
-
-  // ── Título
+  scrollContent: { paddingHorizontal: 20, paddingBottom: 40 },
   titleContainer: { marginTop: 10, marginBottom: 20 },
   mainTitle: {
     fontFamily: 'Lexend_900Black',
@@ -300,8 +206,6 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     lineHeight: 22,
   },
-
-  // ── Estatísticas
   statsRow: { flexDirection: 'row', gap: 12, marginBottom: 16 },
   statCard: {
     flex: 1,
@@ -331,10 +235,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#9CA3AF',
   },
-
-  // ── Dica de Treinador
   tipCard: {
-    backgroundColor: '#005CEE',
     borderRadius: 16,
     paddingVertical: 16,
     paddingHorizontal: 18,
@@ -353,8 +254,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     lineHeight: 22,
   },
-
-  // ── Aquecimento
   sectionTitle: {
     fontFamily: 'Lexend_800ExtraBold',
     fontSize: 12,
@@ -378,8 +277,6 @@ const styles = StyleSheet.create({
   warmupTextBlock: { flex: 1 },
   warmupName: { fontFamily: 'Lexend_700Bold', fontSize: 15, color: '#1A1C29', marginBottom: 3 },
   warmupDetail: { fontFamily: 'Lexend_400Regular', fontSize: 13, color: '#9CA3AF' },
-
-  // ── Exercise Card
   exerciseCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
@@ -404,20 +301,16 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
   },
   exerciseTags: { flexDirection: 'row', alignItems: 'center', marginBottom: 14 },
-  tagBlue: {
+  tagColor: {
     fontFamily: 'Lexend_800ExtraBold',
     fontSize: 11,
-    color: '#005CEE',
     letterSpacing: 0.5,
   },
   tagDot: {
     fontFamily: 'Lexend_800ExtraBold',
     fontSize: 13,
-    color: '#005CEE',
     marginHorizontal: 2,
   },
-
-  // ── Stats do exercício: 3 cards individuais
   exerciseStatsRow: { flexDirection: 'row', gap: 8 },
   exerciseStatCard: {
     flex: 1,
@@ -430,7 +323,6 @@ const styles = StyleSheet.create({
   exerciseStatAccent: {
     width: 3,
     alignSelf: 'stretch',
-    backgroundColor: '#005CEE',
     borderRadius: 2,
     marginRight: 10,
   },
@@ -447,15 +339,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#1A1C29',
   },
-
-  // ── Botão Começar
   startButton: {
-    backgroundColor: '#005CEE',
     borderRadius: 16,
     paddingVertical: 18,
     alignItems: 'center',
     marginTop: 4,
-    shadowColor: '#005CEE',
     shadowOpacity: 0.35,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 6 },
@@ -466,55 +354,5 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     letterSpacing: 1.2,
-  },
-
-  // ── Bottom Navigation
-  bottomNav: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 80,
-    backgroundColor: '#FFFFFF',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -5 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 10,
-  },
-  navItem: {
-    width: 100,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  navIconSpacing: { marginBottom: 4 },
-  navLabel: {
-    fontFamily: 'Lexend_700Bold',
-    fontSize: 10,
-    color: '#9CA3AF',
-  },
-  fabContainer: {
-    width: 100,
-    position: 'relative',
-    top: -25,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  fab: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#005CEE',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#005CEE',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
-    elevation: 6,
   },
 });

@@ -4,8 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 // Telas
 import Dashboard from '../screens/Dashboard';
 import CriarTreino from '../screens/CriarTreino';
-// Temporariamente apontando DetalhesTreino para TreinoMusculacao até a Fase 2
-import TreinoMusculacao from '../screens/TreinoMusculacao';
+import DetalhesTreino from '../screens/DetalhesTreino';
 
 const Stack = createStackNavigator();
 
@@ -19,7 +18,7 @@ export default function HomeStack() {
     >
       <Stack.Screen name="Dashboard" component={Dashboard} />
       <Stack.Screen name="CriarTreino" component={CriarTreino} />
-      <Stack.Screen name="DetalhesTreino" component={TreinoMusculacao} />
+      <Stack.Screen name="DetalhesTreino" component={DetalhesTreino} />
     </Stack.Navigator>
   );
 }

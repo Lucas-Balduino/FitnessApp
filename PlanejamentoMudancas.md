@@ -309,7 +309,7 @@ src/
 
 ### Etapa 2.1 — Centralizar dados dos treinos
 
-- [ ] Criar `src/data/exerciciosPorEsporte.js` com estrutura:
+- [x] Criar `src/data/exerciciosPorEsporte.js` com estrutura:
   ```js
   export const exerciciosPorEsporte = {
     musculacao: { titulo: 'MUSCULAÇÃO', cor: '#005CEE', aquecimento: [...], exercicios: [...] },
@@ -317,25 +317,25 @@ src/
     // corrida, futebol, volei, natacao
   };
   ```
-- [ ] Copiar arrays `aquecimento` e `exercicios` de cada `Treino*.js` para esse arquivo
+- [x] Copiar arrays `aquecimento` e `exercicios` de cada `Treino*.js` para esse arquivo
 
 ### Etapa 2.2 — Criar DetalhesTreino.js
 
-- [ ] Criar `src/screens/DetalhesTreino.js` baseado no layout de `TreinoMusculacao.js`
-- [ ] Ler parâmetros: `const { esporte } = route.params`
-- [ ] Buscar dados: `const dados = exerciciosPorEsporte[esporte]`
-- [ ] Aplicar `dados.cor` dinamicamente nos estilos
-- [ ] Registrar no `HomeStack` como rota `DetalhesTreino`
+- [x] Criar `src/screens/DetalhesTreino.js` baseado no layout de `TreinoMusculacao.js`
+- [x] Ler parâmetros: `const { esporte } = route.params`
+- [x] Buscar dados: `const dados = exerciciosPorEsporte[esporte]`
+- [x] Aplicar `dados.cor` dinamicamente nos estilos
+- [x] Registrar no `HomeStack` como rota `DetalhesTreino`
 
 ### Etapa 2.3 — Atualizar navegação no Dashboard
 
-- [ ] Mapear cada card para `{ esporte: 'musculacao' }`, `{ esporte: 'ciclismo' }`, etc.
-- [ ] Passar também `cor` e `titulo` nos params se necessário para header
+- [x] Mapear cada card para `{ esporte: '1' }`, `{ esporte: '2' }`, etc.
+- [x] Passar também `cor` e `titulo` nos params se necessário para header
 
 ### Etapa 2.4 — Remover arquivos antigos
 
-- [ ] Deletar (ou arquivar) `TreinoMusculacao.js`, `TreinoCiclismo.js`, `TreinoCorrida.js`, `TreinoFutebol.js`, `TreinoVolei.js`, `TreinoNatacao.js`
-- [ ] Remover imports órfãos
+- [x] Deletar (ou arquivar) `TreinoMusculacao.js`, `TreinoCiclismo.js`, `TreinoCorrida.js`, `TreinoFutebol.js`, `TreinoVolei.js`, `TreinoNatacao.js`
+- [x] Remover imports órfãos
 
 **Critério de conclusão:** os 6 esportes abrem a mesma tela com conteúdo diferente via `route.params`.
 
