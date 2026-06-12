@@ -12,29 +12,15 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useScreenAnimation } from '../hooks/useScreenAnimation';
+import CustomSwitch from '../components/CustomSwitch';
+import CustomPicker from '../components/CustomPicker';
+import ChevronDownIcon from '../Icons/ChevronDownIcon.svg';
 
 // ==========================================
 // COMPONENTES CUSTOMIZADOS (DESIGN SYSTEM)
 // ==========================================
 
-// 1. SWITCH CUSTOMIZADO
-const CustomSwitch = ({ value, onValueChange, activeColor = '#84CC16' }) => (
-  <TouchableOpacity
-    activeOpacity={0.8}
-    onPress={() => onValueChange(!value)}
-    style={[
-      styles.switchTrack,
-      { 
-        backgroundColor: value ? activeColor : '#E5E7EB',
-        alignItems: value ? 'flex-end' : 'flex-start'
-      }
-    ]}
-  >
-    <View style={styles.switchThumb} />
-  </TouchableOpacity>
-);
-
-// 2. SLIDER CUSTOMIZADO (Arrastável)
+// 1. SLIDER CUSTOMIZADO (Arrastável)
 const CustomSlider = ({ value, min, max, onValueChange, activeColor }) => {
   const [trackWidth, setTrackWidth] = useState(0);
 
@@ -207,7 +193,7 @@ export default function CriarTreino() {
           <Text style={styles.subLabel}>MODALIDADE DE ESPORTE</Text>
           <TouchableOpacity style={styles.pickerCard} onPress={() => abrirPicker('Modalidade')}>
             <Text style={styles.pickerTextBlue}>{modalidade}</Text>
-            <Text style={styles.chevron}>˅</Text>
+            <ChevronDownIcon width={20} height={20} color="#9CA3AF" />
           </TouchableOpacity>
 
           <Text style={styles.subLabel}>DIFICULDADE</Text>
@@ -215,7 +201,7 @@ export default function CriarTreino() {
             <View style={styles.rowAlign}>
               <Text style={styles.pickerTextOrange}>{dificuldade}</Text>
             </View>
-            <Text style={styles.chevron}>˅</Text>
+            <ChevronDownIcon width={20} height={20} color="#9CA3AF" />
           </TouchableOpacity>
         </View>
 
@@ -276,33 +262,14 @@ export default function CriarTreino() {
 
       </ScrollView>
 
-      {/* ==========================================
-          MODAL DO PICKER CUSTOMIZADO (Bottom Sheet)
-          ========================================== */}
-      <Modal visible={pickerConfig.visible} transparent={true} animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Selecione a {pickerConfig.tipo}</Text>
-            
-            {pickerConfig.opcoes.map((opcao, index) => (
-              <TouchableOpacity 
-                key={index} 
-                style={styles.modalOption}
-                onPress={() => selecionarOpcao(opcao)}
-              >
-                <Text style={styles.modalOptionText}>{opcao}</Text>
-              </TouchableOpacity>
-            ))}
-
-            <TouchableOpacity 
-              style={styles.modalCancelButton}
-              onPress={() => setPickerConfig({ ...pickerConfig, visible: false })}
-            >
-              <Text style={styles.modalCancelText}>Cancelar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      {/* MODAL DE SELEÇÃO (PICKER) */}
+      <CustomPicker
+        visible={pickerConfig.visible}
+        tipo={pickerConfig.tipo}
+        opcoes={pickerConfig.opcoes}
+        onClose={() => setPickerConfig({ ...pickerConfig, visible: false })}
+        onSelect={selecionarOpcao}
+      />
 
       </SafeAreaView>
     </Animated.View>

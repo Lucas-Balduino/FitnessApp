@@ -1,29 +1,52 @@
-import React from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 
 export default function CustomPicker({ visible, tipo, opcoes, onClose, onSelect }) {
+  const slideAnim = useRef(new Animated.Value(600)).current;
+
+  useEffect(() => {
+    if (visible) {
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 250,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(slideAnim, {
+        toValue: 600,
+        duration: 250,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [visible, slideAnim]);
+
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Selecione: {tipo}</Text>
-          {opcoes.map((op) => (
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+      <TouchableOpacity activeOpacity={1} style={styles.modalOverlay} onPress={onClose}>
+        <Animated.View 
+          style={[styles.modalContent, { transform: [{ translateY: slideAnim }] }]}
+        >
+          {/* Previne fechar quando clica dentro do conteúdo */}
+          <TouchableOpacity activeOpacity={1} style={{ width: '100%' }}>
+            <Text style={styles.modalTitle}>Selecione: {tipo}</Text>
+            {opcoes.map((op) => (
+              <TouchableOpacity 
+                key={op} 
+                style={styles.modalOption}
+                onPress={() => onSelect(op)}
+              >
+                <Text style={styles.modalOptionText}>{op}</Text>
+              </TouchableOpacity>
+            ))}
             <TouchableOpacity 
-              key={op} 
-              style={styles.modalOption}
-              onPress={() => onSelect(op)}
+              style={styles.modalCancelButton}
+              onPress={onClose}
             >
-              <Text style={styles.modalOptionText}>{op}</Text>
+              <Text style={styles.modalCancelText}>Cancelar</Text>
             </TouchableOpacity>
-          ))}
-          <TouchableOpacity 
-            style={styles.modalCancelButton}
-            onPress={onClose}
-          >
-            <Text style={styles.modalCancelText}>Cancelar</Text>
           </TouchableOpacity>
-        </View>
-      </View>
+        </Animated.View>
+      </TouchableOpacity>
     </Modal>
   );
 }
