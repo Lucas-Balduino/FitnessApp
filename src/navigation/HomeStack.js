@@ -13,7 +13,9 @@ export default function HomeStack() {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        animationEnabled: false // Desativa animação nativa para usarmos o nosso custom hook depois
+        animationEnabled: false,
+        gestureEnabled: false,
+        cardStyle: { flex: 1, backgroundColor: '#F8F9FE' },
       }}
     >
       <Stack.Screen name="Dashboard" component={Dashboard} />

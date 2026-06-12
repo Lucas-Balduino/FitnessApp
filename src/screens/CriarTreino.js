@@ -4,11 +4,12 @@ import {
   Text, 
   StyleSheet, 
   TouchableOpacity, 
-  SafeAreaView, 
-  ScrollView, 
+  ScrollView,
   TextInput,
   Modal
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 
 // ==========================================
 // COMPONENTES CUSTOMIZADOS (DESIGN SYSTEM)
@@ -113,7 +114,7 @@ export default function CriarTreino() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       
       {/* CABEÇALHO */}
       <View style={styles.header}>
@@ -125,7 +126,7 @@ export default function CriarTreino() {
       </View>
 
       {/* CONTEÚDO */}
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
         <View style={styles.titleContainer}>
           <Text style={styles.mainTitle}>Crie{'\n'}Seu Treino</Text>

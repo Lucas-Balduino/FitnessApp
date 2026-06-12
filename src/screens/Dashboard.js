@@ -3,10 +3,11 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
 import { treinos } from '../data/treinos';
@@ -16,7 +17,7 @@ export default function Dashboard() {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <Text style={styles.menuIcon}>☰</Text>
@@ -25,7 +26,7 @@ export default function Dashboard() {
         <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <View style={styles.titleContainer}>
           <Text style={styles.mainTitle}>ESCOLHA SEU TREINO</Text>
           <Text style={styles.subtitle}>
@@ -95,7 +96,7 @@ export default function Dashboard() {
         </View>
 
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

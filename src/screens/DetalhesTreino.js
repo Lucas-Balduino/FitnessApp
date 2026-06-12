@@ -4,12 +4,12 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
   ScrollView,
   Image,
   Animated,
   Dimensions,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { exerciciosPorEsporte } from '../data/exerciciosPorEsporte';
 
@@ -34,7 +34,7 @@ export default function DetalhesTreino({ route }) {
     Animated.timing(slideAnim, {
       toValue: 0,
       duration: 320,
-      useNativeDriver: true,
+      useNativeDriver: false,
     }).start();
   }, [slideAnim]);
 
@@ -43,13 +43,13 @@ export default function DetalhesTreino({ route }) {
     Animated.timing(slideAnim, {
       toValue: SCREEN_WIDTH,
       duration: 260,
-      useNativeDriver: true,
+      useNativeDriver: false,
     }).start(() => fechar());
   };
 
   if (!dados) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} edges={['top']}>
         <Text style={{ textAlign: 'center', marginTop: 50, fontFamily: 'Lexend_700Bold' }}>
           Treino não encontrado!
         </Text>
@@ -61,7 +61,7 @@ export default function DetalhesTreino({ route }) {
 
   return (
     <Animated.View style={{ flex: 1, transform: [{ translateX: slideAnim }] }}>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} edges={['top']}>
         {/* ── CABEÇALHO ── */}
         <View style={styles.header}>
           <TouchableOpacity onPress={handleFechar} style={styles.backButton}>
@@ -72,7 +72,7 @@ export default function DetalhesTreino({ route }) {
         </View>
 
         {/* ── CONTEÚDO ── */}
-        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           {/* TÍTULO */}
           <View style={styles.titleContainer}>
             <Text style={styles.mainTitle}>{titulo}</Text>

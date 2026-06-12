@@ -1,6 +1,9 @@
+import 'react-native-gesture-handler';
 import React, { useState } from 'react';
-import { SafeAreaView, StatusBar, ActivityIndicator, View, StyleSheet } from 'react-native';
+import { StatusBar, ActivityIndicator, View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   useFonts,
   Lexend_400Regular,
@@ -13,7 +16,6 @@ import AppDrawer from './src/navigation/AppDrawer';
 import AuthStack from './src/navigation/AuthStack';
 
 export default function App() {
-  // Flag temporária para forçar usuário "logado" e testarmos o Drawer
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   let [fontsLoaded] = useFonts({
@@ -32,12 +34,14 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F8F9FE" />
-      <NavigationContainer>
-        {isLoggedIn ? <AppDrawer /> : <AuthStack />}
-      </NavigationContainer>
-    </SafeAreaView>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <StatusBar barStyle="dark-content" backgroundColor="#F8F9FE" />
+        <NavigationContainer>
+          {isLoggedIn ? <AppDrawer /> : <AuthStack />}
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
 

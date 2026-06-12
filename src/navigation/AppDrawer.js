@@ -29,6 +29,10 @@ export default function AppDrawer() {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerShown: false,
+        // Garante altura limitada para ScrollViews nas telas filhas
+        sceneStyle: { flex: 1, backgroundColor: '#F8F9FE' },
+        // Drawer só responde ao gesto na borda esquerda — não compete com scroll vertical
+        swipeEdgeWidth: 32,
         drawerActiveBackgroundColor: '#005CEE',
         drawerActiveTintColor: '#FFFFFF',
         drawerInactiveTintColor: '#9CA3AF',
