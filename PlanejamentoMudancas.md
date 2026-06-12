@@ -524,53 +524,53 @@ A API separa metadados de descrições. Planejar **duas chamadas**:
 
 ### Etapa 6.2 — Criar utilitários de API
 
-- [ ] Criar `src/utils/wgerApi.js` com funções:
+- [x] Criar `src/utils/wgerApi.js` com funções:
   - `fetchExercises(limit)` → lista de exercícios
   - `fetchExerciseInfo(exerciseId)` → descrição
   - `fetchCategories()` → mapa id → nome
-- [ ] Criar `src/utils/stripHtml.js` → remove tags `<p>`, `<ul>`, `<li>`, etc.
+- [x] Criar `src/utils/stripHtml.js` → remove tags `<p>`, `<ul>`, `<li>`, etc.
 
 ### Etapa 6.3 — Custom Hook `useWgerExercises`
 
-- [ ] Criar `src/hooks/useWgerExercises.js`
-- [ ] Estados (`useState`):
+- [x] Criar `src/hooks/useWgerExercises.js`
+- [x] Estados (`useState`):
   - `exercicios` (array, inicia `[]`)
   - `categorias` (objeto id→nome)
   - `carregando` (boolean, inicia `true`)
   - `erro` (string | null)
-- [ ] `useEffect` ao montar:
+- [x] `useEffect` ao montar:
   1. `setCarregando(true)`
   2. `fetchExercises()` + `fetchCategories()` em paralelo (`Promise.all`)
   3. Salvar resultados nos estados
   4. `setCarregando(false)` no bloco `finally`
-- [ ] Retornar `{ exercicios, categorias, carregando, erro }`
+- [x] Retornar `{ exercicios, categorias, carregando, erro }`
 
 ### Etapa 6.4 — Criar Biblioteca Stack
 
-- [ ] Criar `src/navigation/BibliotecaStack.js`:
+- [x] Criar `src/navigation/BibliotecaStack.js`:
   - `ListaExercicios` → `BibliotecaScreen.js`
   - `DetalheExercicio` → `DetalheExercicioScreen.js`
-- [ ] Registrar `Biblioteca` no `AppDrawer` apontando para este Stack
-- [ ] `headerShown: false` em ambas
+- [x] Registrar `Biblioteca` no `AppDrawer` apontando para este Stack
+- [x] `headerShown: false` em ambas
 
 ### Etapa 6.5 — Tela de listagem (BibliotecaScreen)
 
-- [ ] Consumir `useWgerExercises()`
-- [ ] Se `carregando` → `<ActivityIndicator size="large" color="#005CEE" />` centralizado
-- [ ] Se `erro` → mensagem amigável + botão "Tentar novamente"
-- [ ] `<FlatList>` com cards: nome do exercício + categoria
-- [ ] `<TextInput>` no topo para filtro por texto (`useState` local `busca`)
-- [ ] Array derivado: `exercicios.filter(e => e.name.toLowerCase().includes(busca.toLowerCase()))`
-- [ ] Filtro por categoria: botões horizontais ou Picker com IDs da Wger
-- [ ] `onPress` do card → `navigation.navigate('DetalheExercicio', { exercicio })`
+- [x] Consumir `useWgerExercises()`
+- [x] Se `carregando` → `<ActivityIndicator size="large" color="#005CEE" />` centralizado
+- [x] Se `erro` → mensagem amigável + botão "Tentar novamente"
+- [x] `<FlatList>` com cards: nome do exercício + categoria
+- [x] `<TextInput>` no topo para filtro por texto (`useState` local `busca`)
+- [x] Array derivado: `exercicios.filter(e => e.name.toLowerCase().includes(busca.toLowerCase()))`
+- [x] Filtro por categoria: botões horizontais ou Picker com IDs da Wger
+- [x] `onPress` do card → `navigation.navigate('DetalheExercicio', { exercicio })`
 
 ### Etapa 6.6 — Tela de detalhes (DetalheExercicioScreen)
 
-- [ ] Ler `route.params.exercicio`
-- [ ] `useEffect` → `fetchExerciseInfo(exercicio.id)` para buscar descrição
-- [ ] Estado local `descricao` + `carregandoDescricao`
-- [ ] Exibir nome, categoria e descrição limpa (`stripHtml`)
-- [ ] Loading próprio enquanto busca descrição
+- [x] Ler `route.params.exercicio`
+- [x] `useEffect` → `fetchExerciseInfo(exercicio.id)` para buscar descrição
+- [x] Estado local `descricao` + `carregandoDescricao`
+- [x] Exibir nome, categoria e descrição limpa (`stripHtml`)
+- [x] Loading próprio enquanto busca descrição
 
 **Critério de conclusão:** abrir Biblioteca pelo Drawer, ver lista da Wger, filtrar por texto, abrir detalhes com descrição em português.
 

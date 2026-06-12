@@ -5,7 +5,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 // Stacks e Telas
 import HomeStack from './HomeStack';
 import CustomDrawerContent from '../components/CustomDrawerContent';
-import Biblioteca from '../screens/Biblioteca';
+import BibliotecaStack from './BibliotecaStack';
 import PerfilScreen from '../screens/PerfilScreen';
 
 // Ícones
@@ -59,7 +59,7 @@ export default function AppDrawer() {
       />
       <Drawer.Screen
         name="Biblioteca"
-        component={Biblioteca}
+        component={BibliotecaStack}
         options={{
           drawerLabel: 'Biblioteca',
           drawerIcon: ({ color }) => <DumbellIcon width={22} height={22} color={color} />,

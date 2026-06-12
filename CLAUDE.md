@@ -54,19 +54,20 @@ npx expo start --web
 
 ## Estado atual vs. estado alvo
 
-### Já implementado (Fases 0 a 4 e 6)
+### Já implementado (Fases 0 a 6)
 
-- Dashboard isolado em `src/screens/Dashboard.js`
+- Dashboard isolado em `src/screens/Dashboard.js` com treinos customizados do Firestore
 - Telas de modalidades unificadas em uma única `src/screens/DetalhesTreino.js` dinâmica
-- Formulário `src/screens/CriarTreino.js` funcional
-- **React Navigation** configurado (AuthStack, AppDrawer e HomeStack)
-- Custom Drawer em `src/components/CustomDrawerContent.js`
-- Custom Hook `useScreenAnimation.js` para transições de tela centralizadas
-- Telas de **Login/Registro** (`LoginScreen.js`), **Perfil** (`PerfilScreen.js`) e **Biblioteca** (`Biblioteca.js`) criadas e conectadas
-- Componentes reutilizáveis extraídos: `CustomSwitch.js`, `CustomPicker.js` e ícones em SVG
-- Fonte Lexend configurada
-- `firebaseConfig.js` existe mas está **vazio** (Pronto para a Fase 5)
-- **Falta:** Integração com Firebase (Auth/Firestore) e Consumo da Wger API (Fases 5, 7 e 8)
+- Formulário `src/screens/CriarTreino.js` funcional com persistência no Firestore
+- **React Navigation** configurado (AuthStack, AppDrawer, HomeStack e BibliotecaStack)
+- Custom Drawer em `src/components/CustomDrawerContent.js` com dados dinâmicos do Firestore e logout
+- Custom Hooks: `useScreenAnimation.js` e `useWgerExercises.js`
+- **Firebase Auth** (email/senha) com persistência de sessão via AsyncStorage
+- **Firestore** para perfil de usuário e treinos customizados
+- Telas de **Login/Registro**, **Perfil**, **Biblioteca** (API Wger) e **Detalhe Exercício** funcionais
+- Componentes reutilizáveis: `CustomSwitch.js`, `CustomPicker.js` e ícones em SVG
+- Utilitários: `wgerApi.js` e `stripHtml.js`
+- **Falta:** Fase 7 (loading consolidados) e Fase 8 (polimento final)
 
 ### Estado alvo (ver `PlanejamentoMudancas.md`)
 

@@ -5,107 +5,176 @@ import {
   View,
   TouchableOpacity,
   TextInput,
-  Image,
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+
+import { useWgerExercises } from '../hooks/useWgerExercises';
 
 // Ícones
 import SearchIcon from '../Icons/SearchIcon.svg';
 import ChevronRightIcon from '../Icons/ChevronRightIcon.svg';
 import DumbellIcon from '../Icons/DumbellIcon.svg';
 
-// Mock temporário para a Biblioteca
-const CATEGORIAS = ['Todos', 'Peito', 'Pernas', 'Costas'];
-
-const EXERCICIOS_MOCK = [
-  { id: '1', nome: 'SUPINO RETO', categoria: 'Peito', iconeCor: '#E6F0FF', iconColor: '#005CEE' },
-  { id: '2', nome: 'AGACHAMENTO LIVRE', categoria: 'Pernas', iconeCor: '#E6F0FF', iconColor: '#005CEE' },
-  { id: '3', nome: 'REMADA CURVADA', categoria: 'Costas', iconeCor: '#E6F0FF', iconColor: '#005CEE' },
-];
-
 export default function Biblioteca() {
   const navigation = useNavigation();
-  const [categoriaAtiva, setCategoriaAtiva] = useState('Todos');
-  const [busca, setBusca] = useState('');
+  const { exercicios, categorias, carregando, erro, recarregar } = useWgerExercises();
 
+  const [busca, setBusca] = useState('');
+  const [categoriaAtiva, setCategoriaAtiva] = useState(null); // null = Todos
+
+  // Montar lista de categorias únicas presentes nos exercícios
+  const categoriasPresentes = Object.entries(categorias)
+    .filter(([id]) => exercicios.some(ex => ex.category === Number(id)))
+    .map(([id, nome]) => ({ id: Number(id), nome }));
+
+  // Filtrar exercícios
+  const exerciciosFiltrados = exercicios.filter(ex => {
+    const matchBusca = ex.name.toLowerCase().includes(busca.toLowerCase());
+    const matchCategoria = categoriaAtiva === null || ex.category === categoriaAtiva;
+    return matchBusca && matchCategoria;
+  });
+
+  const renderExercicio = ({ item }) => {
+    const categoriaNome = item.categoryName || categorias[item.category] || 'Outro';
+    return (
+      <TouchableOpacity
+        style={styles.exercicioCard}
+        activeOpacity={0.7}
+        onPress={() => navigation.navigate('DetalheExercicio', { exercicio: item, categoriaNome })}
+      >
+        <View style={styles.exercicioIconContainer}>
+          <DumbellIcon width={22} height={22} color="#005CEE" />
+        </View>
+        <View style={styles.exercicioInfo}>
+          <Text style={styles.exercicioNome} numberOfLines={1}>{item.name.toUpperCase()}</Text>
+          <Text style={styles.exercicioCategoria}>{categoriaNome}</Text>
+        </View>
+        <ChevronRightIcon width={18} height={18} color="#9CA3AF" />
+      </TouchableOpacity>
+    );
+  };
+
+  // ── LOADING ──
+  if (carregando) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <Text style={styles.menuIcon}>☰</Text>
+          </TouchableOpacity>
+          <Text style={styles.logoKinetic}>KINETIC</Text>
+          <View style={{ width: 24 }} />
+        </View>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#005CEE" />
+          <Text style={styles.loadingText}>Carregando exercícios...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // ── ERRO ──
+  if (erro) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <Text style={styles.menuIcon}>☰</Text>
+          </TouchableOpacity>
+          <Text style={styles.logoKinetic}>KINETIC</Text>
+          <View style={{ width: 24 }} />
+        </View>
+        <View style={styles.loadingContainer}>
+          <Text style={styles.erroText}>{erro}</Text>
+          <TouchableOpacity style={styles.retryButton} onPress={recarregar}>
+            <Text style={styles.retryText}>TENTAR NOVAMENTE</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // ── CONTEÚDO ──
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      {/* ── CABEÇALHO ── */}
+      {/* CABEÇALHO */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuButton}>
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <Text style={styles.menuIcon}>☰</Text>
         </TouchableOpacity>
         <Text style={styles.logoKinetic}>KINETIC</Text>
         <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* TÍTULO E SUBTÍTULO */}
-        <View style={styles.titleContainer}>
-          <Text style={styles.mainTitle}>BIBLIOTECA</Text>
-          <Text style={styles.subtitle}>
-            Explore exercícios reais para complementar seus treinos
-          </Text>
-        </View>
+      {/* TÍTULO */}
+      <View style={styles.titleContainer}>
+        <Text style={styles.mainTitle}>BIBLIOTECA</Text>
+        <Text style={styles.subtitle}>
+          Explore exercícios reais para complementar seus treinos
+        </Text>
+      </View>
 
-        {/* BARRA DE BUSCA */}
-        <View style={styles.searchContainer}>
-          <SearchIcon width={20} height={20} color="#9CA3AF" />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Buscar exercício..."
-            placeholderTextColor="#9CA3AF"
-            value={busca}
-            onChangeText={setBusca}
-          />
-        </View>
+      {/* BARRA DE BUSCA */}
+      <View style={styles.searchContainer}>
+        <SearchIcon width={18} height={18} color="#9CA3AF" />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Buscar exercícios..."
+          placeholderTextColor="#9CA3AF"
+          value={busca}
+          onChangeText={setBusca}
+        />
+      </View>
 
-        {/* FILTROS DE CATEGORIA */}
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false} 
-          style={styles.filtersWrapper}
-          contentContainerStyle={styles.filtersContainer}
-        >
-          {CATEGORIAS.map((cat) => {
-            const isAtivo = categoriaAtiva === cat;
-            return (
-              <TouchableOpacity
-                key={cat}
-                onPress={() => setCategoriaAtiva(cat)}
-                style={[styles.filterChip, isAtivo && styles.filterChipActive]}
-                activeOpacity={0.8}
-              >
-                <Text style={[styles.filterText, isAtivo && styles.filterTextActive]}>
-                  {cat}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
+      {/* FILTRO DE CATEGORIAS */}
+      <FlatList
+        horizontal
+        data={[{ id: null, nome: 'Todos' }, ...categoriasPresentes]}
+        keyExtractor={(item) => String(item.id)}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.categoriasList}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={[
+              styles.categoriaBtn,
+              categoriaAtiva === item.id && styles.categoriaBtnAtiva,
+            ]}
+            onPress={() => setCategoriaAtiva(item.id)}
+          >
+            <Text
+              style={[
+                styles.categoriaBtnText,
+                categoriaAtiva === item.id && styles.categoriaBtnTextAtiva,
+              ]}
+            >
+              {item.nome}
+            </Text>
+          </TouchableOpacity>
+        )}
+        style={styles.categoriasContainer}
+      />
 
-        {/* LISTA DE EXERCÍCIOS */}
-        <Text style={styles.sectionTitle}>EXERCÍCIOS</Text>
+      {/* CONTADOR */}
+      <Text style={styles.contadorText}>
+        {exerciciosFiltrados.length} exercício{exerciciosFiltrados.length !== 1 ? 's' : ''} encontrado{exerciciosFiltrados.length !== 1 ? 's' : ''}
+      </Text>
 
-        <View style={styles.listContainer}>
-          {EXERCICIOS_MOCK.map((ex) => (
-            <TouchableOpacity key={ex.id} style={styles.card} activeOpacity={0.7}>
-              <View style={[styles.iconWrapper, { backgroundColor: ex.iconeCor }]}>
-                <DumbellIcon width={20} height={20} color={ex.iconColor} />
-              </View>
-
-              <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>{ex.nome}</Text>
-                <Text style={styles.cardSubtitle}>{ex.categoria}</Text>
-              </View>
-
-              <ChevronRightIcon width={20} height={20} color="#9CA3AF" />
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
+      {/* LISTA DE EXERCÍCIOS */}
+      <FlatList
+        data={exerciciosFiltrados}
+        keyExtractor={(item) => String(item.id)}
+        renderItem={renderExercicio}
+        contentContainerStyle={styles.listaContent}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>Nenhum exercício encontrado</Text>
+          </View>
+        }
+      />
     </SafeAreaView>
   );
 }
@@ -122,9 +191,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
   },
-  menuButton: {
-    padding: 5,
-  },
   menuIcon: {
     fontSize: 24,
     color: '#005CEE',
@@ -135,122 +201,159 @@ const styles = StyleSheet.create({
     color: '#005CEE',
     letterSpacing: 1,
   },
-  scrollContent: {
-    paddingBottom: 40,
-  },
   titleContainer: {
     paddingHorizontal: 20,
-    marginTop: 10,
-    marginBottom: 24,
+    marginBottom: 20,
   },
   mainTitle: {
     fontFamily: 'Lexend_900Black',
-    fontSize: 40,
+    fontSize: 28,
     color: '#1A1C29',
-    lineHeight: 44,
-    marginBottom: 10,
+    marginBottom: 6,
   },
   subtitle: {
     fontFamily: 'Lexend_400Regular',
-    fontSize: 16,
+    fontSize: 14,
     color: '#6B7280',
-    lineHeight: 24,
+    lineHeight: 20,
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
+    marginHorizontal: 20,
     paddingHorizontal: 16,
-    height: 56,
-    marginHorizontal: 20,
-    marginBottom: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.02,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  searchInput: {
-    flex: 1,
-    marginLeft: 12,
-    fontFamily: 'Lexend_400Regular',
-    fontSize: 15,
-    color: '#1A1C29',
-    height: '100%',
-  },
-  filtersWrapper: {
-    flexGrow: 0,
-    marginBottom: 32,
-  },
-  filtersContainer: {
-    paddingHorizontal: 20,
-    gap: 12,
-  },
-  filterChip: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 100,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#F3F4F6',
-  },
-  filterChipActive: {
-    backgroundColor: '#005CEE',
-    borderColor: '#005CEE',
-  },
-  filterText: {
-    fontFamily: 'Lexend_700Bold',
-    fontSize: 13,
-    color: '#6B7280',
-  },
-  filterTextActive: {
-    color: '#FFFFFF',
-  },
-  sectionTitle: {
-    fontFamily: 'Lexend_800ExtraBold',
-    fontSize: 12,
-    color: '#9CA3AF',
-    letterSpacing: 2,
-    marginHorizontal: 20,
+    paddingVertical: 14,
     marginBottom: 16,
-  },
-  listContainer: {
-    paddingHorizontal: 20,
-    gap: 16,
-  },
-  card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    padding: 16,
-    borderRadius: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.03,
     shadowRadius: 8,
     elevation: 2,
   },
-  iconWrapper: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  cardContent: {
+  searchInput: {
     flex: 1,
-  },
-  cardTitle: {
-    fontFamily: 'Lexend_800ExtraBold',
-    fontSize: 16,
+    fontFamily: 'Lexend_400Regular',
+    fontSize: 15,
     color: '#1A1C29',
-    marginBottom: 4,
+    marginLeft: 12,
   },
-  cardSubtitle: {
+  categoriasContainer: {
+    maxHeight: 50,
+    marginBottom: 10,
+  },
+  categoriasList: {
+    paddingHorizontal: 20,
+    gap: 8,
+  },
+  categoriaBtn: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.02,
+    shadowRadius: 4,
+    elevation: 1,
+  },
+  categoriaBtnAtiva: {
+    backgroundColor: '#005CEE',
+  },
+  categoriaBtnText: {
+    fontFamily: 'Lexend_700Bold',
+    fontSize: 13,
+    color: '#6B7280',
+  },
+  categoriaBtnTextAtiva: {
+    color: '#FFFFFF',
+  },
+  contadorText: {
     fontFamily: 'Lexend_400Regular',
     fontSize: 13,
+    color: '#9CA3AF',
+    paddingHorizontal: 20,
+    marginBottom: 10,
+  },
+  listaContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 30,
+  },
+  exercicioCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.03,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  exercicioIconContainer: {
+    width: 46,
+    height: 46,
+    borderRadius: 14,
+    backgroundColor: '#E6F0FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 14,
+  },
+  exercicioInfo: {
+    flex: 1,
+  },
+  exercicioNome: {
+    fontFamily: 'Lexend_800ExtraBold',
+    fontSize: 14,
+    color: '#1A1C29',
+    marginBottom: 3,
+  },
+  exercicioCategoria: {
+    fontFamily: 'Lexend_400Regular',
+    fontSize: 12,
+    color: '#9CA3AF',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontFamily: 'Lexend_400Regular',
+    fontSize: 14,
+    color: '#9CA3AF',
+    marginTop: 12,
+  },
+  erroText: {
+    fontFamily: 'Lexend_700Bold',
+    fontSize: 15,
+    color: '#EF4444',
+    textAlign: 'center',
+    paddingHorizontal: 30,
+    marginBottom: 20,
+  },
+  retryButton: {
+    backgroundColor: '#005CEE',
+    borderRadius: 16,
+    paddingHorizontal: 30,
+    paddingVertical: 14,
+  },
+  retryText: {
+    fontFamily: 'Lexend_800ExtraBold',
+    fontSize: 14,
+    color: '#FFFFFF',
+    letterSpacing: 1,
+  },
+  emptyContainer: {
+    paddingVertical: 40,
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontFamily: 'Lexend_400Regular',
+    fontSize: 14,
     color: '#9CA3AF',
   },
 });
