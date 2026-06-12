@@ -5,6 +5,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 // Stacks e Telas
 import HomeStack from './HomeStack';
 import CustomDrawerContent from '../components/CustomDrawerContent';
+import Biblioteca from '../screens/Biblioteca';
+import PerfilScreen from '../screens/PerfilScreen';
 
 // Ícones
 import HomeIcon from '../Icons/HomeIcon.svg';
@@ -40,8 +42,9 @@ export default function AppDrawer() {
           fontFamily: 'Lexend_700Bold',
           fontSize: 14,
         },
+        // AQUI ESTÁ O ESTILO DO BOTÃO DO DRAWER
         drawerItemStyle: {
-          borderRadius: 12, // Altere este valor (ex: 8 para quadrado, 100 para totalmente arredondado)
+          borderRadius: 24, // Altere este valor (ex: 8 para quadrado, 100 para totalmente arredondado)
           paddingHorizontal: 8,
           marginVertical: 4,
         },
@@ -57,7 +60,7 @@ export default function AppDrawer() {
       />
       <Drawer.Screen
         name="Biblioteca"
-        component={() => <PlaceholderScreen name="Biblioteca" />}
+        component={Biblioteca}
         options={{
           drawerLabel: 'Biblioteca',
           drawerIcon: ({ color }) => <DumbellIcon width={22} height={22} color={color} />,
@@ -65,7 +68,7 @@ export default function AppDrawer() {
       />
       <Drawer.Screen
         name="Perfil"
-        component={() => <PlaceholderScreen name="Perfil" />}
+        component={PerfilScreen}
         options={{
           drawerLabel: 'Perfil',
           drawerIcon: ({ color }) => <ProfileIcon width={22} height={22} color={color} />,

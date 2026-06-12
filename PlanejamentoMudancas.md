@@ -348,33 +348,33 @@ src/
 
 ### Etapa 3.1 — Criar o hook
 
-- [ ] Criar `src/hooks/useScreenAnimation.js`
-- [ ] Assinatura: `function useScreenAnimation(onClose)`
-- [ ] Internamente:
+- [x] Criar `src/hooks/useScreenAnimation.js`
+- [x] Assinatura: `function useScreenAnimation(onClose)`
+- [x] Internamente:
   - `useRef(new Animated.Value(SCREEN_WIDTH))` para `slideAnim`
   - `useEffect` → slide-in (320ms, `toValue: 0`) ao montar
   - `handleClose` → slide-out (260ms, `toValue: SCREEN_WIDTH`) → chama `onClose()` no callback `.start()`
-- [ ] Retornar `{ slideAnim, handleClose }`
+- [x] Retornar `{ slideAnim, handleClose }`
 
 ### Etapa 3.2 — Aplicar em DetalhesTreino
 
-- [ ] Importar hook em `DetalhesTreino.js`
-- [ ] Substituir lógica inline de animação:
+- [x] Importar hook em `DetalhesTreino.js`
+- [x] Substituir lógica inline de animação:
   ```js
   const navigation = useNavigation();
   const { slideAnim, handleClose } = useScreenAnimation(() => navigation.goBack());
   ```
-- [ ] Envolver conteúdo em `<Animated.View style={{ transform: [{ translateX: slideAnim }] }}>`
-- [ ] Botão voltar chama `handleClose` (não `navigation.goBack()` direto)
+- [x] Envolver conteúdo em `<Animated.View style={{ transform: [{ translateX: slideAnim }] }}>`
+- [x] Botão voltar chama `handleClose` (não `navigation.goBack()` direto)
 
 ### Etapa 3.3 — Aplicar em CriarTreino (opcional, recomendado)
 
-- [ ] `CriarTreino.js` hoje não tem animação slide — adicionar o mesmo hook para consistência visual
+- [x] `CriarTreino.js` hoje não tem animação slide — adicionar o mesmo hook para consistência visual
 
 ### Etapa 3.4 — Garantir convivência com Stack
 
-- [ ] Confirmar que `HomeStack` mantém `animationEnabled: false` em `DetalhesTreino` e `CriarTreino`
-- [ ] Testar: entrar na tela (slide-in da direita) → voltar (slide-out para direita) → `goBack` no Stack
+- [x] Confirmar que `HomeStack` mantém `animationEnabled: false` em `DetalhesTreino` e `CriarTreino`
+- [x] Testar: entrar na tela (slide-in da direita) → voltar (slide-out para direita) → `goBack` no Stack
 
 **Critério de conclusão:** animação idêntica à atual, mas em um único arquivo reutilizável.
 
@@ -387,29 +387,29 @@ src/
 
 ### Etapa 4.1 — Tela de Login/Registro
 
-- [ ] Criar `src/screens/LoginScreen.js`
-- [ ] Campos: `TextInput` para email e senha
-- [ ] Estados locais: `email`, `senha`, `carregando`, `modoRegistro` (toggle login ↔ criar conta)
-- [ ] Botão **Entrar** → chama Firebase (Fase 5; por ora, navega manualmente)
-- [ ] Botão **Criar Conta** → alterna para modo registro
-- [ ] Design: fundo `#F8F9FE`, logo KINETIC, botões `#005CEE`, fonte Lexend
-- [ ] Loading: `ActivityIndicator` sobre o botão enquanto `carregando === true`
+- [x] Criar `src/screens/LoginScreen.js`
+- [x] Campos: `TextInput` para email e senha
+- [x] Estados locais: `email`, `senha`, `carregando`, `modoRegistro` (toggle login ↔ criar conta)
+- [x] Botão **Entrar** → chama Firebase (Fase 5; por ora, navega manualmente)
+- [x] Botão **Criar Conta** → alterna para modo registro
+- [x] Design: fundo `#F8F9FE`, logo KINETIC, botões `#005CEE`, fonte Lexend
+- [x] Loading: `ActivityIndicator` sobre o botão enquanto `carregando === true`
 
 ### Etapa 4.2 — Tela de Perfil/Configurações
 
-- [ ] Criar `src/screens/PerfilScreen.js`
-- [ ] Seções:
+- [x] Criar `src/screens/PerfilScreen.js`
+- [x] Seções:
   - Avatar placeholder + nome do usuário
   - Campo editável: nome, nível de experiência
   - Switch: notificações de treino (reutilizar lógica visual do `CriarTreino.js`)
   - Botão **Salvar alterações** (Firestore na Fase 5)
-- [ ] Estados: `nome`, `nivel`, `notificacoes`, `carregando`, `salvando`
-- [ ] Registrar rota `Perfil` no `AppDrawer`
+- [x] Estados: `nome`, `nivel`, `notificacoes`, `carregando`, `salvando`
+- [x] Registrar rota `Perfil` no `AppDrawer`
 
 ### Etapa 4.3 — Conectar ao Drawer
 
-- [ ] Confirmar que Perfil abre pelo menu lateral
-- [ ] Remover qualquer referência residual a "PROFILE" na bottom nav (já removida na Fase 1)
+- [x] Confirmar que Perfil abre pelo menu lateral
+- [x] Remover qualquer referência residual a "PROFILE" na bottom nav (já removida na Fase 1)
 
 **Critério de conclusão:** as 4 telas existem e são acessíveis — Login (Auth Stack), Dashboard, DetalhesTreino, Perfil.
 
