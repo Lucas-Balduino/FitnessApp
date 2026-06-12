@@ -1,21 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 
 import LogoutIcon from '../Icons/LogoutIcon.svg';
 
+import { auth, db } from '../../firebaseConfig';
+import { signOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+
 export default function CustomDrawerContent(props) {
+  const [nomeUsuario, setNomeUsuario] = useState('');
+
+  useEffect(() => {
+    async function carregarNome() {
+      try {
+        const uid = auth.currentUser?.uid;
+        if (!uid) return;
+        const docSnap = await getDoc(doc(db, 'usuarios', uid));
+        if (docSnap.exists()) {
+          setNomeUsuario(docSnap.data().nome || '');
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    carregarNome();
+  }, []);
+
+  const inicial = nomeUsuario ? nomeUsuario.charAt(0).toUpperCase() : (auth.currentUser?.email?.charAt(0).toUpperCase() || 'U');
+
   return (
     <View style={styles.container}>
       <DrawerContentScrollView {...props} contentContainerStyle={styles.scrollContent}>
         {/* Cabeçalho do Drawer */}
         <View style={styles.header}>
           <View style={styles.avatarContainer}>
-            <Text style={styles.avatarLetter}>L</Text>
+            <Text style={styles.avatarLetter}>{inicial}</Text>
           </View>
           <View style={styles.headerTextContainer}>
             <Text style={styles.greetingText}>Olá, Atleta!</Text>
-            <Text style={styles.nameText}>Lucas Silva</Text>
+            <Text style={styles.nameText}>{nomeUsuario || auth.currentUser?.email || 'Usuário'}</Text>
           </View>
         </View>
 
@@ -28,7 +52,7 @@ export default function CustomDrawerContent(props) {
       {/* Rodapé com botão de Sair */}
       <View style={styles.footer}>
         <View style={styles.separator} />
-        <TouchableOpacity style={styles.logoutButton} onPress={() => console.log('Sair pressionado')}>
+        <TouchableOpacity style={styles.logoutButton} onPress={() => signOut(auth)}>
           <LogoutIcon width={24} height={24} color="#F44336" style={{ marginRight: 15 }} />
           <Text style={styles.logoutText}>Sair</Text>
         </TouchableOpacity>

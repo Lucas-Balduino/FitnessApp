@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -13,8 +14,34 @@ import { useNavigation } from '@react-navigation/native';
 import { treinos } from '../data/treinos';
 import { estatisticas } from '../data/estatisticas';
 
+import { auth, db } from '../../firebaseConfig';
+import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+
 export default function Dashboard() {
   const navigation = useNavigation();
+  const [treinosCustomizados, setTreinosCustomizados] = useState([]);
+  const [carregandoTreinos, setCarregandoTreinos] = useState(true);
+
+  useEffect(() => {
+    async function carregarTreinos() {
+      try {
+        const uid = auth.currentUser?.uid;
+        if (!uid) return;
+        const q = query(
+          collection(db, 'treinos_customizados'),
+          where('userId', '==', uid)
+        );
+        const snapshot = await getDocs(q);
+        const lista = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setTreinosCustomizados(lista);
+      } catch (error) {
+        console.error('Erro ao carregar treinos:', error);
+      } finally {
+        setCarregandoTreinos(false);
+      }
+    }
+    carregarTreinos();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -77,6 +104,28 @@ export default function Dashboard() {
             </View>
           );
         })}
+
+        {/* SEÇÃO: MEUS TREINOS CUSTOMIZADOS */}
+        {carregandoTreinos ? (
+          <View style={{ paddingVertical: 20, alignItems: 'center' }}>
+            <ActivityIndicator size="small" color="#005CEE" />
+          </View>
+        ) : treinosCustomizados.length > 0 ? (
+          <View style={styles.customSection}>
+            <Text style={styles.customSectionTitle}>MEUS TREINOS</Text>
+            {treinosCustomizados.map((treino) => (
+              <View key={treino.id} style={styles.customCard}>
+                <View style={[styles.customCardAccent, { backgroundColor: '#005CEE' }]} />
+                <View style={styles.customCardContent}>
+                  <Text style={styles.customCardNome}>{treino.nome}</Text>
+                  <Text style={styles.customCardInfo}>
+                    {treino.modalidade} • {treino.dificuldade} • {treino.duracao}min
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        ) : null}
 
         <View style={styles.statsSection}>
           <Text style={styles.statsTitle}>ESTATÍSTICAS ÚLTIMOS 7 DIAS</Text>
@@ -279,5 +328,46 @@ const styles = StyleSheet.create({
   statSub: {
     fontFamily: 'Lexend_800ExtraBold',
     fontSize: 10,
-  }
+  },
+  customSection: {
+    marginBottom: 30,
+    paddingHorizontal: 20,
+  },
+  customSectionTitle: {
+    fontFamily: 'Lexend_800ExtraBold',
+    fontSize: 14,
+    color: '#9CA3AF',
+    letterSpacing: 2,
+    marginBottom: 15,
+  },
+  customCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    marginBottom: 12,
+    flexDirection: 'row',
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.03,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  customCardAccent: {
+    width: 5,
+  },
+  customCardContent: {
+    flex: 1,
+    padding: 18,
+  },
+  customCardNome: {
+    fontFamily: 'Lexend_800ExtraBold',
+    fontSize: 16,
+    color: '#1A1C29',
+    marginBottom: 4,
+  },
+  customCardInfo: {
+    fontFamily: 'Lexend_400Regular',
+    fontSize: 13,
+    color: '#9CA3AF',
+  },
 });

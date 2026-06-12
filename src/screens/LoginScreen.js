@@ -16,8 +16,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import EyeIcon from '../Icons/EyeIcon.svg';
 import EyeOffIcon from '../Icons/EyeOffIcon.svg';
 
-import { auth } from '../../firebaseConfig';
+import { auth, db } from '../../firebaseConfig';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 export default function LoginScreen() {
   const [modoRegistro, setModoRegistro] = useState(false);
@@ -44,7 +45,14 @@ export default function LoginScreen() {
           setCarregando(false);
           return;
         }
-        await createUserWithEmailAndPassword(auth, email, senha);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
+        // Cria documento do usuário no Firestore
+        await setDoc(doc(db, 'usuarios', userCredential.user.uid), {
+          nome: nome,
+          nivel: 'Iniciante',
+          notificacoes: true,
+          criadoEm: serverTimestamp(),
+        });
       } else {
         await signInWithEmailAndPassword(auth, email, senha);
       }

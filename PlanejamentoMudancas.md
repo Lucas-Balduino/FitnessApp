@@ -422,24 +422,24 @@ src/
 
 ### Etapa 5.1 — Configurar firebaseConfig.js
 
-- [ ] Inicializar app Firebase com `initializeApp(firebaseConfig)`
-- [ ] Exportar `auth = getAuth(app)` e `db = getFirestore(app)`
+- [x] Inicializar app Firebase com `initializeApp(firebaseConfig)`
+- [x] Exportar `auth = getAuth(app)` e `db = getFirestore(app)`
 
 ### Etapa 5.2 — Listener de autenticação no App.js
 
-- [ ] Estado: `const [usuario, setUsuario] = useState(null)` e `const [authCarregando, setAuthCarregando] = useState(true)`
-- [ ] `useEffect` com `onAuthStateChanged(auth, (user) => { setUsuario(user); setAuthCarregando(false); })`
-- [ ] Renderização:
+- [x] Estado: `const [usuario, setUsuario] = useState(null)` e `const [authCarregando, setAuthCarregando] = useState(true)`
+- [x] `useEffect` com `onAuthStateChanged(auth, (user) => { setUsuario(user); setAuthCarregando(false); })`
+- [x] Renderização:
   - `authCarregando` → `ActivityIndicator` centralizado
   - `!usuario` → `<AuthStack />`
   - `usuario` → `<AppDrawer />`
 
 ### Etapa 5.3 — Integrar LoginScreen com Firebase Auth
 
-- [ ] **Entrar:** `signInWithEmailAndPassword(auth, email, senha)`
-- [ ] **Criar conta:** `createUserWithEmailAndPassword(auth, email, senha)` + criar doc em `usuarios/{uid}`
-- [ ] Tratar erros com `Alert.alert` (senha fraca, email inválido, etc.)
-- [ ] `carregando = true` antes da chamada; `false` no `finally`
+- [x] **Entrar:** `signInWithEmailAndPassword(auth, email, senha)`
+- [x] **Criar conta:** `createUserWithEmailAndPassword(auth, email, senha)` + criar doc em `usuarios/{uid}`
+- [x] Tratar erros com `Alert.alert` (senha fraca, email inválido, etc.)
+- [x] `carregando = true` antes da chamada; `false` no `finally`
 
 ### Etapa 5.4 — Modelagem Firestore
 
@@ -470,32 +470,32 @@ src/
 
 ### Etapa 5.5 — Salvar treino customizado (CriarTreino.js)
 
-- [ ] Importar `addDoc, collection` do Firestore
-- [ ] No botão Salvar: montar objeto e `addDoc(collection(db, 'treinos_customizados'), { ...dados, userId: auth.currentUser.uid })`
-- [ ] Loading no botão durante salvamento
-- [ ] Após sucesso: `handleClose()` (animação + goBack)
+- [x] Importar `addDoc, collection` do Firestore
+- [x] No botão Salvar: montar objeto e `addDoc(collection(db, 'treinos_customizados'), { ...dados, userId: auth.currentUser.uid })`
+- [x] Loading no botão durante salvamento
+- [x] Após sucesso: `handleClose()` (animação + goBack)
 
 ### Etapa 5.6 — Carregar treinos no Dashboard
 
-- [ ] `useEffect` + `getDocs` com query `where('userId', '==', uid)` (ou `onSnapshot` para tempo real)
-- [ ] Estados: `treinosCustomizados`, `carregandoTreinos`
-- [ ] Exibir cards extras abaixo dos esportes fixos via `FlatList` ou `.map()`
-- [ ] Loading: `ActivityIndicator` enquanto `carregandoTreinos`
+- [x] `useEffect` + `getDocs` com query `where('userId', '==', uid)` (ou `onSnapshot` para tempo real)
+- [x] Estados: `treinosCustomizados`, `carregandoTreinos`
+- [x] Exibir cards extras abaixo dos esportes fixos via `FlatList` ou `.map()`
+- [x] Loading: `ActivityIndicator` enquanto `carregandoTreinos`
 
 ### Etapa 5.7 — Alimentar Perfil com Firestore
 
-- [ ] Ao montar `PerfilScreen`: `getDoc(doc(db, 'usuarios', uid))`
-- [ ] Preencher campos com dados do documento
-- [ ] Salvar: `updateDoc(doc(db, 'usuarios', uid), { nome, nivel, notificacoes })`
+- [x] Ao montar `PerfilScreen`: `getDoc(doc(db, 'usuarios', uid))`
+- [x] Preencher campos com dados do documento
+- [x] Salvar: `updateDoc(doc(db, 'usuarios', uid), { nome, nivel, notificacoes })`
 
 ### Etapa 5.8 — Logout no Drawer
 
-- [ ] Botão Sair chama `signOut(auth)`
-- [ ] `onAuthStateChanged` redireciona automaticamente para Auth Stack
+- [x] Botão Sair chama `signOut(auth)`
+- [x] `onAuthStateChanged` redireciona automaticamente para Auth Stack
 
 ### Etapa 5.9 — Regras de segurança Firestore (mínimo para demo)
 
-- [ ] No Console Firebase, configurar regras básicas:
+- [x] No Console Firebase, configurar regras básicas:
   ```
   match /usuarios/{uid} { allow read, write: if request.auth.uid == uid; }
   match /treinos_customizados/{id} { allow read, write: if request.auth.uid == resource.data.userId; }

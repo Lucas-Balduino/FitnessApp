@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   TextInput,
-  Switch,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -17,13 +17,16 @@ import CustomPicker from '../components/CustomPicker';
 
 import ChevronDownIcon from '../Icons/ChevronDownIcon.svg';
 
+import { auth, db } from '../../firebaseConfig';
+import { signOut } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+
 export default function PerfilScreen() {
   const navigation = useNavigation();
   
-  // Estados Locais (Mocks temporários)
-  const [nome, setNome] = useState('Lucas Silva');
-  const [email] = useState('lucas@email.com');
-  const [nivel, setNivel] = useState('Intermediário');
+  const [nome, setNome] = useState('');
+  const [email] = useState(auth.currentUser?.email || '');
+  const [nivel, setNivel] = useState('Iniciante');
   
   // Controle do CustomPicker
   const [pickerVisible, setPickerVisible] = useState(false);
@@ -32,14 +35,54 @@ export default function PerfilScreen() {
   const [notificacoes, setNotificacoes] = useState(true);
   const [treinoParceiro, setTreinoParceiro] = useState(false);
   
+  const [carregando, setCarregando] = useState(true);
   const [salvando, setSalvando] = useState(false);
 
-  const handleSalvar = () => {
+  // Carregar dados do Firestore ao montar a tela
+  useEffect(() => {
+    async function carregarPerfil() {
+      try {
+        const uid = auth.currentUser?.uid;
+        if (!uid) return;
+        const docSnap = await getDoc(doc(db, 'usuarios', uid));
+        if (docSnap.exists()) {
+          const dados = docSnap.data();
+          setNome(dados.nome || '');
+          setNivel(dados.nivel || 'Iniciante');
+          setNotificacoes(dados.notificacoes !== undefined ? dados.notificacoes : true);
+          setTreinoParceiro(dados.treinoParceiro !== undefined ? dados.treinoParceiro : false);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar perfil:', error);
+      } finally {
+        setCarregando(false);
+      }
+    }
+    carregarPerfil();
+  }, []);
+
+  const handleSalvar = async () => {
     setSalvando(true);
-    setTimeout(() => {
+    try {
+      const uid = auth.currentUser?.uid;
+      if (!uid) return;
+      await setDoc(doc(db, 'usuarios', uid), {
+        nome: nome,
+        nivel: nivel,
+        notificacoes: notificacoes,
+        treinoParceiro: treinoParceiro,
+      }, { merge: true });
+      Alert.alert('Sucesso', 'Alterações salvas com sucesso!');
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Erro', 'Não foi possível salvar as alterações.');
+    } finally {
       setSalvando(false);
-      alert('Alterações salvas com sucesso! (Mock)');
-    }, 1500);
+    }
+  };
+
+  const handleLogout = () => {
+    signOut(auth).catch(e => Alert.alert('Erro', e.message));
   };
 
   return (
@@ -53,6 +96,12 @@ export default function PerfilScreen() {
         <View style={{ width: 24 }} />
       </View>
 
+      {carregando ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#005CEE" />
+        </View>
+      ) : (
+      <>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* TÍTULO E SUBTÍTULO */}
         <View style={styles.titleContainer}>
@@ -139,11 +188,7 @@ export default function PerfilScreen() {
 
         <TouchableOpacity 
           style={styles.logoutButton}
-          onPress={async () => {
-            const { getAuth, signOut } = await import('firebase/auth');
-            const auth = getAuth();
-            signOut(auth).catch(e => alert(e.message));
-          }}
+          onPress={handleLogout}
         >
           <Text style={styles.logoutText}>Sair da conta</Text>
         </TouchableOpacity>
@@ -159,6 +204,8 @@ export default function PerfilScreen() {
           setPickerVisible(false);
         }}
       />
+      </>
+      )}
     </SafeAreaView>
   );
 }

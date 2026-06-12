@@ -7,7 +7,9 @@ import {
   ScrollView,
   TextInput,
   Modal,
-  Animated
+  Animated,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -15,6 +17,9 @@ import { useScreenAnimation } from '../hooks/useScreenAnimation';
 import CustomSwitch from '../components/CustomSwitch';
 import CustomPicker from '../components/CustomPicker';
 import ChevronDownIcon from '../Icons/ChevronDownIcon.svg';
+
+import { auth, db } from '../../firebaseConfig';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 
 // ==========================================
 // COMPONENTES CUSTOMIZADOS (DESIGN SYSTEM)
@@ -83,6 +88,7 @@ export default function CriarTreino() {
   // Estados dos Pickers
   const [modalidade, setModalidade] = useState('Corrida');
   const [dificuldade, setDificuldade] = useState('Avançado');
+  const [salvando, setSalvando] = useState(false);
   
   // Controle do Modal de Seleção (Picker Customizado)
   const [pickerConfig, setPickerConfig] = useState({ visible: false, tipo: '', opcoes: [] });
@@ -256,8 +262,40 @@ export default function CriarTreino() {
         </View>
 
         {/* BOTÃO SALVAR */}
-        <TouchableOpacity style={styles.saveButton} onPress={fechar}>
-          <Text style={styles.saveButtonText}>SALVAR</Text>
+        <TouchableOpacity 
+          style={[styles.saveButton, salvando && { opacity: 0.7 }]} 
+          onPress={async () => {
+            setSalvando(true);
+            try {
+              await addDoc(collection(db, 'treinos_customizados'), {
+                userId: auth.currentUser.uid,
+                nome: nome || 'Treino sem nome',
+                descricao: descricao,
+                modalidade: modalidade,
+                dificuldade: dificuldade,
+                intensidade: intensidade,
+                duracao: duracao,
+                calorias: calorias,
+                treinoParceiro: treinoParceiro,
+                notificacoes: notificacoes,
+                notas: notas,
+                criadoEm: serverTimestamp(),
+              });
+              fechar();
+            } catch (error) {
+              console.error(error);
+              Alert.alert('Erro', 'Não foi possível salvar o treino.');
+            } finally {
+              setSalvando(false);
+            }
+          }}
+          disabled={salvando}
+        >
+          {salvando ? (
+            <ActivityIndicator color="#FFFFFF" />
+          ) : (
+            <Text style={styles.saveButtonText}>SALVAR</Text>
+          )}
         </TouchableOpacity>
 
       </ScrollView>
