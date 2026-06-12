@@ -20,6 +20,8 @@ O design foi cuidadosamente construído para garantir a consistência visual em 
 
 - **React Native** (Interface do aplicativo)
 - **Expo** (Workflow de desenvolvimento)
+- **React Navigation** (Navegação via Stack e Drawer)
+- **React Native Reanimated** e **Animated API** (Transições e micro-interações)
 - **React Native SVG** (Renderização e manipulação de ícones vetoriais)
 - **@expo-google-fonts/lexend** (Tipografia moderna e importação de fontes)
 
@@ -31,13 +33,14 @@ Abaixo, apresentamos a árvore de diretórios principal do projeto. Diretórios 
 FitnessApp/
 ├── assets/                  # Imagens estáticas e recursos visuais padrão do Expo
 ├── src/                     # Código fonte da aplicação
-│   ├── components/          # Componentes customizados e reutilizáveis
+│   ├── components/          # Componentes customizados (CustomSwitch, CustomPicker, Drawer)
 │   ├── data/                # Informações estáticas (treinos e estatísticas)
-│   ├── hooks/               # Custom hooks React
+│   ├── hooks/               # Custom hooks React (useScreenAnimation)
 │   ├── Icons/               # Ícones em formato SVG transformados em componentes
 │   ├── navigation/          # Arquivos de Stack, Drawer e navegação principal
-│   ├── screens/             # Telas completas da aplicação
-│   └── utils/               # Funções de ajuda e comunicação com API
+│   ├── screens/             # Telas da aplicação (Login, Dashboard, Perfil, Biblioteca, etc.)
+│   └── utils/               # Funções auxiliares
+
 ├── App.js                   # Componente raiz
 ├── app.json                 # Configurações do ambiente Expo
 ├── babel.config.js          # Configuração do compilador Babel e presets

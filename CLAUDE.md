@@ -54,17 +54,19 @@ npx expo start --web
 
 ## Estado atual vs. estado alvo
 
-### Já implementado
+### Já implementado (Fases 0 a 4 e 6)
 
-- Dashboard monolítico em `App.js` (~530 linhas)
-- 6 telas de modalidade em `src/screens/Treino*.js` (código duplicado)
-- Formulário `src/screens/CriarTreino.js`
-- Navegação via `<Modal>` + estados booleanos no `App.js`
-- Animação slide-in/out com `Animated` API (duplicada em cada tela de treino)
-- Fonte Lexend via `@expo-google-fonts/lexend`
-- Ícones SVG em `Icons/` (importados como componentes React)
-- `firebaseConfig.js` existe mas está **vazio**
-- **Sem** React Navigation, Firebase, API externa, Login, Perfil, Drawer
+- Dashboard isolado em `src/screens/Dashboard.js`
+- Telas de modalidades unificadas em uma única `src/screens/DetalhesTreino.js` dinâmica
+- Formulário `src/screens/CriarTreino.js` funcional
+- **React Navigation** configurado (AuthStack, AppDrawer e HomeStack)
+- Custom Drawer em `src/components/CustomDrawerContent.js`
+- Custom Hook `useScreenAnimation.js` para transições de tela centralizadas
+- Telas de **Login/Registro** (`LoginScreen.js`), **Perfil** (`PerfilScreen.js`) e **Biblioteca** (`Biblioteca.js`) criadas e conectadas
+- Componentes reutilizáveis extraídos: `CustomSwitch.js`, `CustomPicker.js` e ícones em SVG
+- Fonte Lexend configurada
+- `firebaseConfig.js` existe mas está **vazio** (Pronto para a Fase 5)
+- **Falta:** Integração com Firebase (Auth/Firestore) e Consumo da Wger API (Fases 5, 7 e 8)
 
 ### Estado alvo (ver `PlanejamentoMudancas.md`)
 
@@ -307,18 +309,9 @@ import DumbellIcon from './Icons/DumbellIcon.svg';
 
 ---
 
-## Dependências planejadas (ainda não instaladas)
-
-Instalar na Fase 0 via `npx expo install`:
+Instalar na Fase 5 via `npx expo install`:
 
 ```
-@react-navigation/native
-@react-navigation/stack
-@react-navigation/drawer
-react-native-screens
-react-native-safe-area-context
-react-native-gesture-handler
-react-native-reanimated
 firebase
 ```
 
