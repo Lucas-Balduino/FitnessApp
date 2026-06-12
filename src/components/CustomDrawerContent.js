@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     color: '#1A1C29',
   },
   drawerItemsContainer: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 5,
   },
   footer: {
     padding: 20,

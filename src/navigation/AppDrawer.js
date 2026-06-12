@@ -51,7 +51,7 @@ export default function AppDrawer() {
         component={() => <PlaceholderScreen name="Biblioteca" />}
         options={{
           drawerLabel: 'Biblioteca',
-          drawerIcon: ({ color }) => <DumbellIcon width={22} height={22} fill={color} />,
+          drawerIcon: ({ color }) => <DumbellIcon width={22} height={22} color={color} />,
         }}
       />
       <Drawer.Screen
@@ -59,7 +59,7 @@ export default function AppDrawer() {
         component={() => <PlaceholderScreen name="Perfil" />}
         options={{
           drawerLabel: 'Perfil',
-          drawerIcon: ({ color }) => <ProfileIcon width={22} height={22} fill={color} />,
+          drawerIcon: ({ color }) => <ProfileIcon width={22} height={22} color={color} />,
         }}
       />
     </Drawer.Navigator>
