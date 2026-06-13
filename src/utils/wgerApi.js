@@ -6,7 +6,6 @@ const BASE_URL = 'https://wger.de/api/v2';
  */
 export async function fetchExercises(limit = 50) {
   const url = BASE_URL + '/exerciseinfo/?limit=' + limit + '&format=json';
-  console.log('[wgerApi] Buscando:', url);
 
   const response = await fetch(url);
   if (!response.ok) {
@@ -16,7 +15,6 @@ export async function fetchExercises(limit = 50) {
   const text = await response.text();
   const data = JSON.parse(text);
   const results = data.results || [];
-  console.log('[wgerApi] Total da API:', results.length);
 
   const exercicios = [];
   for (let i = 0; i < results.length; i++) {
@@ -43,7 +41,6 @@ export async function fetchExercises(limit = 50) {
     });
   }
 
-  console.log('[wgerApi] Com nome:', exercicios.length);
   return exercicios;
 }
 

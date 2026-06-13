@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
-import { StatusBar, ActivityIndicator, View, StyleSheet } from 'react-native';
+import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -14,18 +14,19 @@ import {
 
 import AppDrawer from './src/navigation/AppDrawer';
 import AuthStack from './src/navigation/AuthStack';
+import LoadingOverlay from './src/components/LoadingOverlay';
 
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebaseConfig';
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [authLoading, setAuthLoading] = useState(true);
+  const [usuario, setUsuario] = useState(null);
+  const [authCarregando, setAuthCarregando] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsLoggedIn(!!user);
-      setAuthLoading(false);
+      setUsuario(user);
+      setAuthCarregando(false);
     });
     return unsubscribe;
   }, []);
@@ -37,12 +38,8 @@ export default function App() {
     Lexend_900Black,
   });
 
-  if (!fontsLoaded || authLoading) {
-    return (
-      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <ActivityIndicator size="large" color="#005CEE" />
-      </View>
-    );
+  if (!fontsLoaded || authCarregando) {
+    return <LoadingOverlay mensagem="Carregando..." />;
   }
 
   return (
@@ -50,16 +47,9 @@ export default function App() {
       <SafeAreaProvider>
         <StatusBar barStyle="dark-content" backgroundColor="#F8F9FE" />
         <NavigationContainer>
-          {isLoggedIn ? <AppDrawer /> : <AuthStack />}
+          {usuario ? <AppDrawer /> : <AuthStack />}
         </NavigationContainer>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F8F9FE',
-  }
-});

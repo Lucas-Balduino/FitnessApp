@@ -37,14 +37,14 @@ export default function LoginScreen() {
       return;
     }
 
+    if (modoRegistro && !nome) {
+      setErro('Por favor, informe seu nome.');
+      return;
+    }
+
     setCarregando(true);
     try {
       if (modoRegistro) {
-        if (!nome) {
-          setErro('Por favor, informe seu nome.');
-          setCarregando(false);
-          return;
-        }
         const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
         // Cria documento do usuário no Firestore
         await setDoc(doc(db, 'usuarios', userCredential.user.uid), {

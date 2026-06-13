@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useScreenAnimation } from '../hooks/useScreenAnimation';
 
+
 import DumbellIcon from '../Icons/DumbellIcon.svg';
 
 import { fetchExerciseInfo } from '../utils/wgerApi';

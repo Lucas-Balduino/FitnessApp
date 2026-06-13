@@ -6,7 +6,6 @@ import {
   TouchableOpacity, 
   ScrollView,
   TextInput,
-  Modal,
   Animated,
   ActivityIndicator,
   Alert,
@@ -268,7 +267,7 @@ export default function CriarTreino() {
             setSalvando(true);
             try {
               await addDoc(collection(db, 'treinos_customizados'), {
-                userId: auth.currentUser.uid,
+                userId: auth.currentUser?.uid,
                 nome: nome || 'Treino sem nome',
                 descricao: descricao,
                 modalidade: modalidade,

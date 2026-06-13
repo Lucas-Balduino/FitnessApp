@@ -54,7 +54,7 @@ npx expo start --web
 
 ## Estado atual vs. estado alvo
 
-### Já implementado (Fases 0 a 6)
+### Já implementado (Fases 0 a 8 — Projeto completo)
 
 - Dashboard isolado em `src/screens/Dashboard.js` com treinos customizados do Firestore
 - Telas de modalidades unificadas em uma única `src/screens/DetalhesTreino.js` dinâmica
@@ -65,9 +65,11 @@ npx expo start --web
 - **Firebase Auth** (email/senha) com persistência de sessão via AsyncStorage
 - **Firestore** para perfil de usuário e treinos customizados
 - Telas de **Login/Registro**, **Perfil**, **Biblioteca** (API Wger) e **Detalhe Exercício** funcionais
-- Componentes reutilizáveis: `CustomSwitch.js`, `CustomPicker.js` e ícones em SVG
+- Componentes reutilizáveis: `CustomSwitch.js`, `CustomPicker.js`, `LoadingOverlay.js` e ícones em SVG
 - Utilitários: `wgerApi.js` e `stripHtml.js`
-- **Falta:** Fase 7 (loading consolidados) e Fase 8 (polimento final)
+- **Loading consolidado**: `LoadingOverlay` reutilizável, padrão try/catch/finally em todas as operações
+- **Variáveis de ambiente**: Firebase keys em `.env` via `process.env.EXPO_PUBLIC_*`
+- **Código limpo**: sem imports mortos, sem flags temporárias, sem console.log de debug
 
 ### Estado alvo (ver `PlanejamentoMudancas.md`)
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import { View, Text } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 // Stacks e Telas
@@ -14,16 +13,6 @@ import DumbellIcon from '../Icons/DumbellIcon.svg';
 import ProfileIcon from '../Icons/ProfileIcon.svg';
 
 const Drawer = createDrawerNavigator();
-
-// Telas Placeholder (Serão implementadas nas Fases 4 e 6)
-const PlaceholderScreen = ({ name }) => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F8F9FE' }}>
-    <Text style={{ fontFamily: 'Lexend_700Bold', fontSize: 20, color: '#005CEE' }}>{name}</Text>
-    <Text style={{ fontFamily: 'Lexend_400Regular', color: '#9CA3AF', marginTop: 10 }}>
-      Em construção...
-    </Text>
-  </View>
-);
 
 export default function AppDrawer() {
   return (
