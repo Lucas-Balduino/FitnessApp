@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
 import { useWgerExercises } from '../hooks/useWgerExercises';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 // Ícones
 import SearchIcon from '../Icons/SearchIcon.svg';
@@ -69,10 +70,7 @@ export default function Biblioteca() {
           <Text style={styles.logoKinetic}>KINETIC</Text>
           <View style={{ width: 24 }} />
         </View>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#005CEE" />
-          <Text style={styles.loadingText}>Carregando exercícios...</Text>
-        </View>
+        <LoadingOverlay mensagem="Carregando exercícios..." />
       </SafeAreaView>
     );
   }

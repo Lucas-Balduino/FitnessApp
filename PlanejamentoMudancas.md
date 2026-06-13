@@ -596,15 +596,15 @@ A API separa metadados de descrições. Planejar **duas chamadas**:
 
 ### Etapa 7.1 — Padronizar componente de loading (opcional)
 
-- [ ] Criar `src/components/LoadingOverlay.js`:
+- [x] Criar `src/components/LoadingOverlay.js`:
   ```js
   // View centralizada + ActivityIndicator color="#005CEE"
   ```
-- [ ] Reutilizar em todas as telas acima
+- [x] Reutilizar em todas as telas acima
 
 ### Etapa 7.2 — Garantir padrão try/catch/finally
 
-- [ ] Toda operação assíncrona segue:
+- [x] Toda operação assíncrona segue:
   1. `setCarregando(true)`
   2. `try { await operacao() }`
   3. `catch { Alert.alert('Erro', mensagem) }`
@@ -620,8 +620,8 @@ A API separa metadados de descrições. Planejar **duas chamadas**:
 
 ### Etapa 8.1 — Custom Drawer com dados reais
 
-- [ ] Exibir nome e email do `auth.currentUser` no cabeçalho do Drawer
-- [ ] Destacar rota ativa com cor `#005CEE`
+- [x] Exibir nome e email do `auth.currentUser` no cabeçalho do Drawer
+- [x] Destacar rota ativa com cor `#005CEE`
 
 ### Etapa 8.2 — Histórico de treinos (opcional, enriquece o projeto)
 
@@ -631,9 +631,9 @@ A API separa metadados de descrições. Planejar **duas chamadas**:
 
 ### Etapa 8.3 — Limpeza geral
 
-- [ ] Remover flag temporária `isLoggedIn` se ainda existir
-- [ ] Remover imports e arquivos mortos
-- [ ] Verificar que não há `Modal` residual no projeto
+- [x] Remover flag temporária `isLoggedIn` se ainda existir
+- [x] Remover imports e arquivos mortos
+- [x] Verificar que não há `Modal` residual no projeto
 - [ ] Testar fluxo completo: Login → Dashboard → Treino → Voltar → Biblioteca → Detalhe → Perfil → Sair
 
 ### Etapa 8.4 — Login com Google (opcional, baixa prioridade)

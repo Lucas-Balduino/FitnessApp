@@ -17,6 +17,8 @@ import CustomPicker from '../components/CustomPicker';
 
 import ChevronDownIcon from '../Icons/ChevronDownIcon.svg';
 
+import LoadingOverlay from '../components/LoadingOverlay';
+
 import { auth, db } from '../../firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -97,9 +99,7 @@ export default function PerfilScreen() {
       </View>
 
       {carregando ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#005CEE" />
-        </View>
+        <LoadingOverlay mensagem="Carregando perfil..." />
       ) : (
       <>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
