@@ -54,17 +54,22 @@ npx expo start --web
 
 ## Estado atual vs. estado alvo
 
-### Já implementado
+### Já implementado (Fases 0 a 8 — Projeto completo)
 
-- Dashboard monolítico em `App.js` (~530 linhas)
-- 6 telas de modalidade em `src/screens/Treino*.js` (código duplicado)
-- Formulário `src/screens/CriarTreino.js`
-- Navegação via `<Modal>` + estados booleanos no `App.js`
-- Animação slide-in/out com `Animated` API (duplicada em cada tela de treino)
-- Fonte Lexend via `@expo-google-fonts/lexend`
-- Ícones SVG em `Icons/` (importados como componentes React)
-- `firebaseConfig.js` existe mas está **vazio**
-- **Sem** React Navigation, Firebase, API externa, Login, Perfil, Drawer
+- Dashboard isolado em `src/screens/Dashboard.js` com treinos customizados do Firestore
+- Telas de modalidades unificadas em uma única `src/screens/DetalhesTreino.js` dinâmica
+- Formulário `src/screens/CriarTreino.js` funcional com persistência no Firestore
+- **React Navigation** configurado (AuthStack, AppDrawer, HomeStack e BibliotecaStack)
+- Custom Drawer em `src/components/CustomDrawerContent.js` com dados dinâmicos do Firestore e logout
+- Custom Hooks: `useScreenAnimation.js` e `useWgerExercises.js`
+- **Firebase Auth** (email/senha) com persistência de sessão via AsyncStorage
+- **Firestore** para perfil de usuário e treinos customizados
+- Telas de **Login/Registro**, **Perfil**, **Biblioteca** (API Wger) e **Detalhe Exercício** funcionais
+- Componentes reutilizáveis: `CustomSwitch.js`, `CustomPicker.js`, `LoadingOverlay.js` e ícones em SVG
+- Utilitários: `wgerApi.js` e `stripHtml.js`
+- **Loading consolidado**: `LoadingOverlay` reutilizável, padrão try/catch/finally em todas as operações
+- **Variáveis de ambiente**: Firebase keys em `.env` via `process.env.EXPO_PUBLIC_*`
+- **Código limpo**: sem imports mortos, sem flags temporárias, sem console.log de debug
 
 ### Estado alvo (ver `PlanejamentoMudancas.md`)
 
@@ -307,18 +312,9 @@ import DumbellIcon from './Icons/DumbellIcon.svg';
 
 ---
 
-## Dependências planejadas (ainda não instaladas)
-
-Instalar na Fase 0 via `npx expo install`:
+Instalar na Fase 5 via `npx expo install`:
 
 ```
-@react-navigation/native
-@react-navigation/stack
-@react-navigation/drawer
-react-native-screens
-react-native-safe-area-context
-react-native-gesture-handler
-react-native-reanimated
 firebase
 ```
 

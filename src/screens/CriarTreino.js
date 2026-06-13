@@ -4,34 +4,27 @@ import {
   Text, 
   StyleSheet, 
   TouchableOpacity, 
-  SafeAreaView, 
-  ScrollView, 
+  ScrollView,
   TextInput,
-  Modal
+  Animated,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { useScreenAnimation } from '../hooks/useScreenAnimation';
+import CustomSwitch from '../components/CustomSwitch';
+import CustomPicker from '../components/CustomPicker';
+import ChevronDownIcon from '../Icons/ChevronDownIcon.svg';
+
+import { auth, db } from '../../firebaseConfig';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 
 // ==========================================
 // COMPONENTES CUSTOMIZADOS (DESIGN SYSTEM)
 // ==========================================
 
-// 1. SWITCH CUSTOMIZADO
-const CustomSwitch = ({ value, onValueChange, activeColor = '#84CC16' }) => (
-  <TouchableOpacity
-    activeOpacity={0.8}
-    onPress={() => onValueChange(!value)}
-    style={[
-      styles.switchTrack,
-      { 
-        backgroundColor: value ? activeColor : '#E5E7EB',
-        alignItems: value ? 'flex-end' : 'flex-start'
-      }
-    ]}
-  >
-    <View style={styles.switchThumb} />
-  </TouchableOpacity>
-);
-
-// 2. SLIDER CUSTOMIZADO (Arrastável)
+// 1. SLIDER CUSTOMIZADO (Arrastável)
 const CustomSlider = ({ value, min, max, onValueChange, activeColor }) => {
   const [trackWidth, setTrackWidth] = useState(0);
 
@@ -70,7 +63,13 @@ const CustomSlider = ({ value, min, max, onValueChange, activeColor }) => {
 // TELA PRINCIPAL
 // ==========================================
 
-export default function CriarTreino({ fechar }) {
+export default function CriarTreino() {
+  const navigation = useNavigation();
+  const { slideAnim, animateOut } = useScreenAnimation();
+  
+  const fechar = () => {
+    animateOut(() => navigation.goBack());
+  };
   // --- ESTADOS DO FORMULÁRIO ---
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
@@ -88,6 +87,7 @@ export default function CriarTreino({ fechar }) {
   // Estados dos Pickers
   const [modalidade, setModalidade] = useState('Corrida');
   const [dificuldade, setDificuldade] = useState('Avançado');
+  const [salvando, setSalvando] = useState(false);
   
   // Controle do Modal de Seleção (Picker Customizado)
   const [pickerConfig, setPickerConfig] = useState({ visible: false, tipo: '', opcoes: [] });
@@ -111,7 +111,8 @@ export default function CriarTreino({ fechar }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <Animated.View style={{ flex: 1, transform: [{ translateX: slideAnim }] }}>
+      <SafeAreaView style={styles.container} edges={['top']}>
       
       {/* CABEÇALHO */}
       <View style={styles.header}>
@@ -123,7 +124,7 @@ export default function CriarTreino({ fechar }) {
       </View>
 
       {/* CONTEÚDO */}
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
         <View style={styles.titleContainer}>
           <Text style={styles.mainTitle}>Crie{'\n'}Seu Treino</Text>
@@ -197,7 +198,7 @@ export default function CriarTreino({ fechar }) {
           <Text style={styles.subLabel}>MODALIDADE DE ESPORTE</Text>
           <TouchableOpacity style={styles.pickerCard} onPress={() => abrirPicker('Modalidade')}>
             <Text style={styles.pickerTextBlue}>{modalidade}</Text>
-            <Text style={styles.chevron}>˅</Text>
+            <ChevronDownIcon width={20} height={20} color="#9CA3AF" />
           </TouchableOpacity>
 
           <Text style={styles.subLabel}>DIFICULDADE</Text>
@@ -205,7 +206,7 @@ export default function CriarTreino({ fechar }) {
             <View style={styles.rowAlign}>
               <Text style={styles.pickerTextOrange}>{dificuldade}</Text>
             </View>
-            <Text style={styles.chevron}>˅</Text>
+            <ChevronDownIcon width={20} height={20} color="#9CA3AF" />
           </TouchableOpacity>
         </View>
 
@@ -260,41 +261,55 @@ export default function CriarTreino({ fechar }) {
         </View>
 
         {/* BOTÃO SALVAR */}
-        <TouchableOpacity style={styles.saveButton} onPress={fechar}>
-          <Text style={styles.saveButtonText}>SALVAR</Text>
+        <TouchableOpacity 
+          style={[styles.saveButton, salvando && { opacity: 0.7 }]} 
+          onPress={async () => {
+            setSalvando(true);
+            try {
+              await addDoc(collection(db, 'treinos_customizados'), {
+                userId: auth.currentUser?.uid,
+                nome: nome || 'Treino sem nome',
+                descricao: descricao,
+                modalidade: modalidade,
+                dificuldade: dificuldade,
+                intensidade: intensidade,
+                duracao: duracao,
+                calorias: calorias,
+                treinoParceiro: treinoParceiro,
+                notificacoes: notificacoes,
+                notas: notas,
+                criadoEm: serverTimestamp(),
+              });
+              fechar();
+            } catch (error) {
+              console.error(error);
+              Alert.alert('Erro', 'Não foi possível salvar o treino.');
+            } finally {
+              setSalvando(false);
+            }
+          }}
+          disabled={salvando}
+        >
+          {salvando ? (
+            <ActivityIndicator color="#FFFFFF" />
+          ) : (
+            <Text style={styles.saveButtonText}>SALVAR</Text>
+          )}
         </TouchableOpacity>
 
       </ScrollView>
 
-      {/* ==========================================
-          MODAL DO PICKER CUSTOMIZADO (Bottom Sheet)
-          ========================================== */}
-      <Modal visible={pickerConfig.visible} transparent={true} animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Selecione a {pickerConfig.tipo}</Text>
-            
-            {pickerConfig.opcoes.map((opcao, index) => (
-              <TouchableOpacity 
-                key={index} 
-                style={styles.modalOption}
-                onPress={() => selecionarOpcao(opcao)}
-              >
-                <Text style={styles.modalOptionText}>{opcao}</Text>
-              </TouchableOpacity>
-            ))}
+      {/* MODAL DE SELEÇÃO (PICKER) */}
+      <CustomPicker
+        visible={pickerConfig.visible}
+        tipo={pickerConfig.tipo}
+        opcoes={pickerConfig.opcoes}
+        onClose={() => setPickerConfig({ ...pickerConfig, visible: false })}
+        onSelect={selecionarOpcao}
+      />
 
-            <TouchableOpacity 
-              style={styles.modalCancelButton}
-              onPress={() => setPickerConfig({ ...pickerConfig, visible: false })}
-            >
-              <Text style={styles.modalCancelText}>Cancelar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-    </SafeAreaView>
+      </SafeAreaView>
+    </Animated.View>
   );
 }
 

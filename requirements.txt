@@ -6,3 +6,4 @@ npm install @react-native-picker/picker @react-native-community/slider
 npx expo install expo-font @expo-google-fonts/lexend
 npm install react-native-svg
 npm install --save-dev react-native-svg-transformer
+npx expo install @react-navigation/native @react-navigation/stack @react-navigation/drawer react-native-screens react-native-safe-area-context react-native-gesture-handler react-native-reanimated firebase
