@@ -5,9 +5,10 @@ import {
   View,
   TouchableOpacity,
   TextInput,
-  FlatList,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
@@ -130,14 +131,15 @@ export default function Biblioteca() {
       </View>
 
       {/* FILTRO DE CATEGORIAS */}
-      <FlatList
+      <ScrollView
         horizontal
-        data={[{ id: null, nome: 'Todos' }, ...categoriasPresentes]}
-        keyExtractor={(item) => String(item.id)}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.categoriasList}
-        renderItem={({ item }) => (
+        style={styles.categoriasContainer}
+      >
+        {[{ id: null, nome: 'Todos' }, ...categoriasPresentes].map((item) => (
           <TouchableOpacity
+            key={String(item.id)}
             style={[
               styles.categoriaBtn,
               categoriaAtiva === item.id && styles.categoriaBtnAtiva,
@@ -153,9 +155,8 @@ export default function Biblioteca() {
               {item.nome}
             </Text>
           </TouchableOpacity>
-        )}
-        style={styles.categoriasContainer}
-      />
+        ))}
+      </ScrollView>
 
       {/* CONTADOR */}
       <Text style={styles.contadorText}>
@@ -169,6 +170,8 @@ export default function Biblioteca() {
         renderItem={renderExercicio}
         contentContainerStyle={styles.listaContent}
         showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={true}
+        style={{ flex: 1 }}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>Nenhum exercício encontrado</Text>

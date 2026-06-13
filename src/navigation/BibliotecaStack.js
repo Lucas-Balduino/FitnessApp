@@ -12,6 +12,8 @@ export default function BibliotecaStack() {
       screenOptions={{
         headerShown: false,
         animationEnabled: false,
+        gestureEnabled: false,
+        cardStyle: { flex: 1, backgroundColor: '#F8F9FE' },
       }}
     >
       <Stack.Screen name="ListaExercicios" component={Biblioteca} />

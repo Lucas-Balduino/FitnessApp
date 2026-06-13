@@ -74,7 +74,7 @@ export default function DetalheExercicioScreen() {
           <View style={{ width: 24 }} />
         </View>
 
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
           {/* ÍCONE HERO */}
           <View style={styles.heroCard}>
             <DumbellIcon width={60} height={60} color="#005CEE" />
